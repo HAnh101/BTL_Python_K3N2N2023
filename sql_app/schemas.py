@@ -1,35 +1,48 @@
+from typing import Union
 from pydantic import BaseModel
 
+class EmployeeBase(BaseModel):
+    employeeName: str
+    departmentId: int
+    employeeSalary: int
+    employeeRate: int
 
-class ItemBase(BaseModel):
-    title: str
-    description: str | None = None
-
-
-class ItemCreate(ItemBase):
+class EmployeeCreate(EmployeeBase):
     pass
 
-
-class Item(ItemBase):
+class EmployeeDepartment(EmployeeBase):
     id: int
-    owner_id: int
-
     class Config:
         orm_mode = True
 
+class ProjectBase(BaseModel):
+    projectName: str
+    projectStatus: str
+    
+class ProjectCreate(ProjectBase):
+    pass
 
-class UserBase(BaseModel):
-    email: str
+class JoinBase(BaseModel):
+    employeeId: int
+    projectId: int
+    joinPosition: str
+    joinSalaryProject: int
 
+class JoinCreate(JoinBase):
+    pass
 
-class UserCreate(UserBase):
-    password: str
-
-
-class User(UserBase):
+class EmployeeJoin(JoinBase):
     id: int
-    is_active: bool
-    items: list[Item] = []
-
     class Config:
         orm_mode = True
+
+class EmployeeJoinProject(JoinBase):
+    id: int
+    class Config:
+        orm_mode = True
+
+class DepartmentBase(BaseModel):
+    departmentName: str
+
+class DepartmentCreate(DepartmentBase):
+    pass
