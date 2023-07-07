@@ -2,9 +2,9 @@ from typing import List
 
 from fastapi import Depends, FastAPI, HTTPException
 from sqlalchemy.orm import Session
-import appDes as appDes
-from . import data, models, schemas
-from .database import SessionLocal, engine
+from sql_app import appDes as appDes
+from sql_app import models
+from sql_app.database import SessionLocal, engine
 from fastapi.responses import HTMLResponse
 models.Base.metadata.create_all(bind=engine)
 

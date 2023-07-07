@@ -1,6 +1,6 @@
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
-from database import Base
+from sql_app.database import Base
 
 class Employee(Base):
     __tablename__ = "employee"
@@ -24,8 +24,8 @@ class Project(Base):
     
 class Join(Base):
     __tablename__ = "join"
-    employeeId= Column(Integer, ForeignKey("employee.id"), nullable=False)
-    projectId= Column(Integer, ForeignKey("project.id"), nullable=False)
+    employeeId= Column(Integer, ForeignKey("employee.id"), primary_key=True, index=True, nullable=False)
+    projectId= Column(Integer, ForeignKey("project.id"), primary_key=True, index=True, nullable=False)
     position = Column(String(20), index=True, nullable=False)
     salaryProject = Column(Integer, index=True, nullable=False)
     
