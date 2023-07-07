@@ -7,7 +7,7 @@ import sql_app.schemas as schemas
 
 class EmployeeMethod:
     def create_employee(db: Session, employee: schemas.EmployeeCreate):
-        db_employee = models.Employee(name = employee.employeeName, departmentId = department.departmentId, salary = employee. employeeSalary, rate = employee.employeeRate)
+        db_employee = models.Employee(name = employee.employeeName, departmentId = models.department.departmentId, salary = employee. employeeSalary, rate = employee.employeeRate)
         db.add(db_employee)
         db.commit()
         db.refresh(db_employee)
@@ -48,7 +48,7 @@ class ProjectMethod:
     
 class JoinMethod:
     def create_join(db: Session, join: schemas.JoinCreate):
-        db_join = models.Join(employeeId = employee.employeeId, projectId = project.projectId, position = join.position, salaryProject = join.joinSalaryProject)
+        db_join = models.Join(employeeId = models.employee.employeeId, projectId = models.project.projectId, position = join.position, salaryProject = join.joinSalaryProject)
         db.add(db_join)
         db.commit()
         db.refresh(db_join)
