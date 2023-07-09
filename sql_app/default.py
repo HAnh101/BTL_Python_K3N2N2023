@@ -78,7 +78,7 @@ def initDef():
             bonus = np.random.randint(100, high=500)
             finalSalary = salary + salaryProject + bonus
             
-            c.execute('''INSERT INTO "joinSalary"("employeeId","projectId", "position", "salaryProject", "bonus", "finalSalary") VALUES (?,?,?,?,?,?)''', 
+            c.execute('''INSERT INTO "participate"("employeeId","projectId", "position", "salaryProject", "bonus", "finalSalary") VALUES (?,?,?,?,?,?)''', 
                       [employee+1, project +1, position, salaryProject, bonus, finalSalary])
         
     # project = 30

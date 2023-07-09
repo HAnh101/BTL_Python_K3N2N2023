@@ -20,14 +20,23 @@ class ProjectBase(BaseModel):
 class ProjectCreate(ProjectBase):
     pass
 
-class JoinBase(BaseModel):
+class ParticipateBase(BaseModel):
     employeeId: int
     projectId: int
+    ParticipatePosition: str
+    participateSalaryProject: int
+    participateBonus: int
+    participateFinalSalary: int
 
-class JoinCreate(JoinBase):
+class ParticipateCreate(ParticipateBase):
     pass
 
-class EmployeeJoinProject(JoinBase):
+class EmployeeParticipate(ParticipateBase):
+    id: int
+    class Config:
+        orm_mode = True
+
+class ParticipateProject(ParticipateBase):
     id: int
     class Config:
         orm_mode = True
@@ -52,7 +61,7 @@ class DepartmentAndProject(BaseModel):
     class Config:
         orm_mode = True
 
-class JoinSalary(BaseModel):
+class ParticipateSalary(BaseModel):
     employeeId : int
     projectId: int
     position: str
@@ -64,7 +73,7 @@ class EmployeeSalary(EmployeeBase):
     class Config:
         orm_mode = True
 
-# class ProjectSalary(ProjectBase):
-#     projectId: int
-#     class Config:
-#         orm_mode = True
+class ProjectSalary(ProjectBase):
+    projectId: int
+    class Config:
+        orm_mode = True

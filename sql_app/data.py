@@ -12,8 +12,8 @@ class EmployeeMethod:
         db.commit()
         db.refresh(db_employee)
         return db_employee
-    def get_byid(db: Session, employeeid: int):
-        return db.query(models.Employee.id.label("ID"), models.Employee.name.label("Name")).filter(models.Employee.id == employeeid).all()
+    def get_by_id(db: Session, employeeId: int):
+        return db.query(models.Employee.id.label("ID"), models.Employee.name.label("Name")).filter(models.Employee.id == employeeId).all()
 
 class ProjectMethod:
     def create_project(db: Session, project : schemas.ProjectBase):
@@ -29,26 +29,30 @@ class ProjectMethod:
     def get_project_id(db:Session, id: int):
         return db.query(models.Project).filter(models.Project.id == id).all()
     
-class JoinMethod:
-    def create_join(db: Session, join: schemas.JoinCreate):
-        db_join = models.Join(
-            employeeId = join.employeeId,
-            projectId = join.projectId,
-            position = join.position,
-            salaryProject = join.joinSalaryProject
+class ParticipateMethod:
+    def create_participate(db: Session, participate: schemas.ParticipateCreate):
+        db_participate = models.Participate(
+            employeeId = participate.employeeId,
+            projectId = participate.projectId,
+            position = participate.participatePosition,
+            salaryProject = participate.participateSalaryProject,
+            bonus = participate.participateBonus,
+            finalSalary = participate.participateFinalSalary,
             )
-        db.add(db_join)
+        db.add(db_participate)
         db.commit()
-        db.refresh(db_join)
-        return db_join
+        db.refresh(db_participate)
+        return db_participate
     
-    def get_join(db:Session, employeeId: int, projectId: int, position: str, salaryProject: int):
-        return db.query(models.Join).filter(
+    def get_participate(db:Session, employeeId: int, projectId: int, position: str, salaryProject: int, bonus: int, finalSalary: int):
+        return db.query(models.Participate).filter(
             or_(
                 models.Employee.id == employeeId, 
                 models.Project.id == projectId,
-                models.Join.position == position, 
-                models.Join.salaryProject == salaryProject,
+                models.Participate.position == position, 
+                models.Participate.salaryProject == salaryProject,
+                models.Participate.bonus == bonus,
+                models.Participate.finalSalary == finalSalary,
             )
         ).all()
     
@@ -93,5 +97,5 @@ class ProjectAndEmployeeMethod:
     def get_all_employee(db: Session, employeeid: Union[int, None]):
         return db.query(models.Employee.id.label('Mã nhân viên'),
                         models.Project.name.label('Phòng ban'),
-                        models.Join.finalSalary.label('Tổng lương tháng')).join(models.Employee).join(models.Project).filter(models.Employee.id == employeeid).all()
+                        models.Participate.finalSalary.label('Tổng lương tháng')).join(models.Employee).join(models.Project).filter(models.Employee.id == employeeid).all()
     
