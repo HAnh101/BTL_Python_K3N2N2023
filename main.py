@@ -6,7 +6,10 @@ import appDes as appDes
 import pandas as pd
 from sql_app import models, data
 from database import SessionLocal, engine, get_db
+from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
+
+templates = Jinja2Templates(directory="pages/")
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
@@ -14,7 +17,7 @@ app = FastAPI(
     description=appDes.description,
     version="1.0.0",
     contact={
-        "name": "Source Code",
+        "maNV": "Source Code",
         "url": "https://github.com/HAnh101/BTL_Python_K3N2N2023",
     },
     openapi_tags=appDes.tags_metadata
@@ -50,3 +53,34 @@ def home():
     '''
     return HTMLResponse(content=html_content, status_code=200)
 
+@app.get('/project/LuongCuaNhanVien/{employeeid}', 
+         tags=['Hoàng Anh Pandas'],
+         description=appDes.descriptionApi['HoangAnhPandas']['LuongCuaNhanVien'])
+def get_employee_salary_project(
+    employeeid: Union[int, None] = None,
+    db: Session = Depends(get_db)
+):
+    if( employeeid != None):
+        if employeeid > 0:
+            employeeInDepartment = data.ProjectAndEmployeeMethod.get_all_employee(db, employeeid=employeeid)
+            df = pd.DataFrame.from_dict(employeeInDepartment)
+            df['Tổng lương tháng'] = df['Tổng lương tháng']
+            luong = df['Tổng lương tháng'].tolist()
+            project = df['Phòng ban'].to_list()
+            maNV = df['Mã nhân viên'][0]
+            project.insert(0, 'Mã nhân viên')
+            luong.insert(0, maNV)
+            dataframe = pd.DataFrame(data = luong, index= project)
+            print(dataframe.T)
+            return dataframe
+        else:
+            raise HTTPException(status_code=404, detail={
+            "field": "employeeid",
+            "errMsg": "Thông tin không hợp lệ"
+        })
+            
+    else: 
+        raise HTTPException(status_code=404, detail={
+            "field": "employeeid",
+            "errMsg": "Chưa có thông tin"
+        })

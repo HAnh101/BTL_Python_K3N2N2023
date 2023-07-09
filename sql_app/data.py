@@ -6,30 +6,18 @@ import sql_app.models as models
 import sql_app.schemas as schemas
 
 class EmployeeMethod:
-    def create_employee(db: Session, employee: schemas.EmployeeCreate, department: schemas.DepartmentCreate):
-        db_employee = models.Employee(name = employee.employeeName, departmentId = department.departmentId, salary = employee. employeeSalary, rate = employee.employeeRate)
+    def create_employee(db: Session, employee: schemas.EmployeeBase):
+        db_employee = models.Employee(name = employee.employeeName, departmentId = employee.departmentIn)
         db.add(db_employee)
         db.commit()
         db.refresh(db_employee)
         return db_employee
-    
-    def get_employee(db:Session, id: int, name: str, departmentId: int, salary: int, rate: int):
-        return db.query(models.Employee).filter(
-            or_(
-                models.Employee.id == id, 
-                models.Employee.name == name, 
-                models.Department.id == departmentId, 
-                models.Employee.salary == salary,
-                models.Employee.rate == rate,   
-            )
-        ).all()
-    
-    def get_all(db:Session):
-        return db.query(models.Employee).all()
+    def get_byid(db: Session, employeeid: int):
+        return db.query(models.Employee.id.label("ID"), models.Employee.name.label("Name")).filter(models.Employee.id == employeeid).all()
 
 class ProjectMethod:
-    def create_project(db: Session, project : schemas.ProjectCreate):
-        db_project = models.Subject(name = project.projectName, status = project.projectStatus)
+    def create_project(db: Session, project : schemas.ProjectBase):
+        db_project = models.Project(name = project.projectName, status = project.projectStatus)
         db.add(db_project)
         db.commit()
         db.refresh(db_project)
@@ -38,24 +26,21 @@ class ProjectMethod:
     def get_all(db:Session):
         return db.query(models.Project).all()
     
-    def get_project(db:Session, id: int, name: str):
-        return db.query(models.Project).filter(
-            or_(
-                models.Project.id == id, 
-                models.Project.name == name,
-            )
-        ).all()
+    def get_project_id(db:Session, id: int):
+        return db.query(models.Project).filter(models.Project.id == id).all()
     
 class JoinMethod:
-    def create_join(db: Session, join: schemas.JoinCreate, employee: schemas.EmployeeCreate, project: schemas.ProjectCreate):
-        db_join = models.Join(employeeId = employee.employeeId, projectId = project.projectId, position = join.position, salaryProject = join.joinSalaryProject)
+    def create_join(db: Session, join: schemas.JoinCreate):
+        db_join = models.Join(
+            employeeId = join.employeeId,
+            projectId = join.projectId,
+            position = join.position,
+            salaryProject = join.joinSalaryProject
+            )
         db.add(db_join)
         db.commit()
         db.refresh(db_join)
         return db_join
-
-    def get_all(db:Session):
-        return db.query(models.Join).all()
     
     def get_join(db:Session, employeeId: int, projectId: int, position: str, salaryProject: int):
         return db.query(models.Join).filter(
@@ -66,22 +51,47 @@ class JoinMethod:
                 models.Join.salaryProject == salaryProject,
             )
         ).all()
+    
+    
 
 class DepartmentMethod:
-    def create_department(db: Session, department: schemas.DepartmentCreate):
+    def create_department(db: Session, department: schemas.DepartmentBase):
         db_department = models.Department(name = department.departmentName)
         db.add(db_department)
         db.commit()
         db.refresh(db_department)
         return db_department
-
-    def get_all(db:Session):
-        return db.query(models.Department).all()
     
-    def get_department(db:Session, id: int, name: str):
+    def get_department(db:Session, id: Union[str, None] = None, name: Union[str, None] = None):
         return db.query(models.Department).filter(
             or_(
                 models.Department.id == id, 
                 models.Department.name == name,
             )
-        ).all()
+        ).all()  
+
+    def update_department(db: Session, department: schemas.Department):
+        db_department_update = db.query(models.Department).filter(
+            and_(
+                models.Department.id == department.departmentId
+            )
+        ).update({
+            'name': department.departmentName,
+        })
+        db.commit()
+        return db.query(models.Department).filter(
+            and_(
+                models.Department.id == department.departmentId
+            )
+        ).first()
+
+    def get_all(db:Session):
+        return db.query(models.Department).all()
+
+
+class ProjectAndEmployeeMethod:
+    def get_all_employee(db: Session, employeeid: Union[int, None]):
+        return db.query(models.Employee.id.label('Mã nhân viên'),
+                        models.Project.name.label('Phòng ban'),
+                        models.Join.finalSalary.label('Tổng lương tháng')).join(models.Employee).join(models.Project).filter(models.Employee.id == employeeid).all()
+    

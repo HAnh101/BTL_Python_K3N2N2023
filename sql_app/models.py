@@ -21,14 +21,16 @@ class Project(Base):
     status = Column(String(10), nullable=False)
 
     projectJoin = relationship("Join", back_populates="projects")
-    
+
 class Join(Base):
-    __tablename__ = "join"
+    __tablename__ = "joinProject"
     employeeId= Column(Integer, ForeignKey("employee.id"), primary_key=True, index=True, nullable=False)
     projectId= Column(Integer, ForeignKey("project.id"), primary_key=True, index=True, nullable=False)
     position = Column(String(20), index=True, nullable=False)
     salaryProject = Column(Integer, index=True, nullable=False)
-    
+    bonus = Column(Integer, index=True, nullable=False)
+    finalSalary = Column(Integer, index=True, nullable=False)
+
     employeeJoin = relationship("Employee", back_populates="joinIn")
     projects = relationship("Project", back_populates="projectJoin")
 
