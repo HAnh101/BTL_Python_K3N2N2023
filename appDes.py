@@ -12,11 +12,11 @@ tags_metadata = [
         "description" : "Hiển thị thông tin của nhóm và thông tin thành viên"
     }, 
     {
-        "name" : " Ngọc Anh Numpy", 
+        "name" : "Ngọc Anh Numpy", 
         "description" : "Cập nhập thông tin Lương tháng và lấy lương tổng kết tháng của một nhân viên"
     }, 
     {
-        "name" : " Ngọc Anh Pandas",
+        "name" : "Ngọc Anh Pandas",
         "description" : "Thống kê Lương tháng của từng nhân viên theo mã dự án tham gia và Tìm kiếm thông tin nhân viên"
     },
     {
@@ -47,7 +47,7 @@ tags_metadata = [
 
 descriptionApi = {
     "NgocAnhPd": { 
-        "ThongKeLuongThang" : "Nhập mã nhân viên để nhận lại thông tin trả về là 1 bảng lương của từng dự án mà nhân viên ấy đã tham gia. projectid mang giá trị số nguyên dương",
+        "ThongKeLuongThuongThang" : "Nhập mã nhân viên để nhận lại thông tin trả về là 1 bảng lương của từng dự án mà nhân viên ấy đã tham gia. projectid mang giá trị số nguyên dương",
         "TimKiemNhanVien": "Nhập một trong các thông tin cá nhân của nhân viên để nhận lại thông tin của bảng chứa các thông tin cần tìm"
     },
     "NgocAnhNp" : {

@@ -143,7 +143,7 @@ class ProjectEmployeeMethod:
                         models.Project.name.label('Dự án'),
                         models.Participate.finalSalary.label('Tổng lương')).join(models.Employee).join(models.Project).filter(
             and_(
-                models.Participate.employeeId == employeeProject.studentid,
+                models.Participate.employeeId == employeeProject.employeeid,
                 models.Participate.projectId == employeeProject.projectid
             )
         ).all()

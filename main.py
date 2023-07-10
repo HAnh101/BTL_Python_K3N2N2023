@@ -100,7 +100,7 @@ def get_bonus_project(
     db: Session = Depends(get_db)
 ):
     if(projectid > 0) :
-        getProject = data.ProjectMethod.get_project_name(db)
+        getProject = data.ProjectMethod.get_project_id(db, id=projectid)
         if projectid > len(getProject):
             return {
                 "msg": "Không tồn tại dự án"
@@ -169,10 +169,10 @@ def get_salary_project_sum_employee(
             if np.array(employeeIndepartment).size !=0:
                 df = pd.DataFrame.from_dict(employeeIndepartment)
                 
-                tongLuongDuAn = (df['Tổng lương dự án'].sum()).tolist()
-                name = df['Họ và tên'][0]
+                tongLuongDuAn = (df['Tổng lương trong dự án'].sum()).tolist()
+                empId = df['Mã nhân viên'][0]
                 return {
-                    "msg": f'Tổng lương dự án {name} là: {tongLuongDuAn}',
+                    "msg": f'Tổng lương trong dự án {empId} là: {tongLuongDuAn}',
                     "data": tongLuongDuAn}
             else :
                 raise HTTPException(status_code=404, detail={
@@ -195,11 +195,11 @@ def post_update_salary(salaryList: schemas.ProjectSalaryUpdate ,db: Session = De
     result = ""
     errorList = []
     line = 0
-    for dict in pointList:
+    for dict in salaryList:
         if(line >= 2):
             if dict[1] < 0:    
                 errorList.append({"field": dict[0], "errMsg" : "Lương nhỏ hơn 0"})
-            elif dict[1] >10:
+            elif dict[1] >100000:
                 errorList.append({"field": dict[0], "errMsg" : "Lương lớn hơn 10"})
         else:
             if dict[1] <= 0:    
@@ -208,7 +208,7 @@ def post_update_salary(salaryList: schemas.ProjectSalaryUpdate ,db: Session = De
     if len(errorList) > 0:
         result = errorList
     else:
-        if np.array(data.ProjectEmployeeMethod.get_employee(db, schemas.ProjectEmployeeBase(employeeId=salaryList.employeeid, projectId=salaryList.projectid))).size != 0:
+        if np.array(data.ProjectEmployeeMethod.get_employee(db, schemas.ProjectEmployeeBase(employeeid=salaryList.employeeid, projectid=salaryList.projectid))).size != 0:
             salaryCal = np.round(
                 (salaryList.employeeSalary) + 
                 (salaryList.projectSalary)
