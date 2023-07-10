@@ -47,7 +47,7 @@ tags_metadata = [
 
 descriptionApi = {
     "NgocAnhPd": { 
-        "ThongKeLuongThang" : "Nhập mã nhân viên để nhận lại thông tin trả về là 1 bảng lương của từng dự án mà nhân viên ấy đã tham gia. projectid mang giá trị số nguyên dương",
+        "ThongKeLuongThuongThang" : "Nhập mã dự án để nhận lại thông tin trả về là 1 bảng lương thưởng của từng dự án. projectid mang giá trị số nguyên dương",
         "TimKiemNhanVien": "Nhập một trong các thông tin cá nhân của nhân viên để nhận lại thông tin của bảng chứa các thông tin cần tìm"
     },
     "NgocAnhNp" : {
