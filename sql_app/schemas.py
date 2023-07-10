@@ -20,6 +20,11 @@ class ProjectBase(BaseModel):
 class ProjectCreate(ProjectBase):
     pass
 
+class Project(BaseModel):
+    projectid: int
+    projectName: str
+    projectStatus: str
+
 class ParticipateBase(BaseModel):
     employeeId: int
     projectId: int
