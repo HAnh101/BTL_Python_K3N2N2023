@@ -209,7 +209,8 @@ class FinalSalaryAndRate:
                         models.Employee.name.label('Họ và Tên'),
                         models.Participate.finalSalary.label('Lương tháng'),
                         models.Employee.rate.label('Đánh giá')
-                        ).group_by(models.Employee.id).order_by((models.Participate.finalSalary).desc(), (models.Employee.rate).desc()).all()
+                        ).order_by((models.Participate.finalSalary).desc(), (models.Employee.rate).desc()).all()
+    
     def get_listFinalSalary(db: Session):
         return db.query(
             models.Employee.name.label('Họ và Tên'),

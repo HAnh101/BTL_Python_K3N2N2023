@@ -75,9 +75,10 @@ def initDef():
         status = statusList[int(np.floor(len(statusList) * np.random.random()))]
         c.execute('''INSERT INTO "project"("name", "status") VALUES (?, ?)''', [f'{name}', status])
     
-    setProject()
+    # setProject()
 
     positionList = ["Trưởng nhóm", "Thành viên"]
+    # bonusList = [250,555,999,500]
 
     for employee in range(0, employeeSum):
         projectLen = c.execute('''SELECT * FROM "project" ''')
@@ -85,6 +86,7 @@ def initDef():
             position = random.choice(positionList)
             salaryProject = 2000
             bonus = np.random.randint(100, high=500)
+            # bonus = random.choice(bonusList)
             finalSalary = salary + salaryProject + bonus
             
             c.execute('''INSERT OR REPLACE INTO "participate"("employeeid","projectid", "position", "salaryProject", "bonus", "finalSalary") VALUES (?,?,?,?,?,?)''', 
