@@ -91,6 +91,26 @@ def get_employee_salary_project(
             "field": "employeeid",
             "errMsg": "Chưa có thông tin"
         })
+    
+@app.post('/project/CapNhatDuAn', 
+          tags=['Hoàng Anh Pandas'],
+          description=appDes.descriptionApi['HoangAnhPandas']['CapNhatDuAn'])
+def post_project(project: schemas.Project, db : Session = Depends(get_db)):
+    result = " "
+    if project.projectid >0 :
+        updateData = data.ProjectMethod.update_project(db, schemas.Project(
+            projectid= project.projectid,
+            projectName= project.projectName,
+            projectStatus= project.projectStatus,
+            ))
+        result = data.ProjectMethod.get_project(db, project.projectid)
+    else:
+        result = {
+            "field": "deparmentid",
+            "errMsg": "Thông tin không hợp lệ"
+        }
+
+    return result
 
 @app.get('/project/ThongKeLuongThuongThang/{projectid}', 
         tags=['Ngọc Anh Pandas'], 
