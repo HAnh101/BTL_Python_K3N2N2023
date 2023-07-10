@@ -1,12 +1,15 @@
-from typing import List, Union
-
 from fastapi import Depends, FastAPI, HTTPException
 from sqlalchemy.orm import Session
+from typing import Union
 import appDes as appDes
+import numpy as np
 import pandas as pd
-from sql_app import models, data
-from database import SessionLocal, engine, get_db
+import sql_app.models as models
+import sql_app.schemas as schemas
+import sql_app.data as data
 from fastapi.templating import Jinja2Templates
+from database import SessionLocal, engine, get_db
+from sql_app.default import initDef 
 from fastapi.responses import HTMLResponse
 
 templates = Jinja2Templates(directory="pages/")
@@ -23,6 +26,7 @@ app = FastAPI(
     openapi_tags=appDes.tags_metadata
 )
 
+initDef()
 
 @app.get('/', response_class=HTMLResponse, tags=['Trang chủ'])
 def home():
@@ -53,6 +57,9 @@ def home():
     '''
     return HTMLResponse(content=html_content, status_code=200)
 
+#region Hanh
+#pd
+
 @app.get('/project/LuongCuaNhanVien/{employeeid}', 
          tags=['Hoàng Anh Pandas'],
          description=appDes.descriptionApi['HoangAnhPandas']['LuongCuaNhanVien'])
@@ -60,7 +67,7 @@ def get_employee_salary_project(
     employeeid: Union[int, None] = None,
     db: Session = Depends(get_db)
 ):
-    if( employeeid != None):
+    if(employeeid != None):
         if employeeid > 0:
             employeeInDepartment = data.ProjectAndEmployeeMethod.get_all_employee(db, employeeid=employeeid)
             df = pd.DataFrame.from_dict(employeeInDepartment)
@@ -84,3 +91,5 @@ def get_employee_salary_project(
             "field": "employeeid",
             "errMsg": "Chưa có thông tin"
         })
+
+# endregion

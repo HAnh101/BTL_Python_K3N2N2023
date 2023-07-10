@@ -23,13 +23,14 @@ class ProjectCreate(ProjectBase):
 class ParticipateBase(BaseModel):
     employeeId: int
     projectId: int
-    ParticipatePosition: str
-    participateSalaryProject: int
-    participateBonus: int
-    participateFinalSalary: int
 
 class ParticipateCreate(ParticipateBase):
-    pass
+    position: str
+    salaryProject: int
+    bonus: int
+    finalSalary: int
+    class Config:
+        orm_mode = True
 
 class EmployeeParticipate(ParticipateBase):
     id: int

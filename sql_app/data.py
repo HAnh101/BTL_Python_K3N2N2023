@@ -34,10 +34,10 @@ class ParticipateMethod:
         db_participate = models.Participate(
             employeeId = participate.employeeId,
             projectId = participate.projectId,
-            position = participate.participatePosition,
-            salaryProject = participate.participateSalaryProject,
-            bonus = participate.participateBonus,
-            finalSalary = participate.participateFinalSalary,
+            position = participate.position,
+            salaryProject = participate.salaryProject,
+            bonus = participate.bonus,
+            finalSalary = participate.finalSalary,
             )
         db.add(db_participate)
         db.commit()

@@ -1,4 +1,5 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
+from kiwisolver import Constraint
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, REAL
 from sqlalchemy.orm import relationship
 from database import Base
 
@@ -27,9 +28,11 @@ class Participate(Base):
     employeeId= Column(Integer, ForeignKey("employee.id"), primary_key=True, index=True, nullable=False)
     projectId= Column(Integer, ForeignKey("project.id"), primary_key=True, index=True, nullable=False)
     position = Column(String(20), index=True, nullable=False)
-    salaryProject = Column(Integer, index=True, nullable=False)
-    bonus = Column(Integer, index=True, nullable=False)
-    finalSalary = Column(Integer, index=True, nullable=False)
+    salaryProject = Column(REAL, index=True, nullable=False)
+    bonus = Column(REAL, index=True, nullable=False)
+    finalSalary = Column(REAL, index=True, nullable=False)
+    # Constraint UC_Participate UNIQUE (ID,LastName)
+
 
     employeeParticipate = relationship("Employee", back_populates="participateIn")
     projects = relationship("Project", back_populates="projectParticipate")

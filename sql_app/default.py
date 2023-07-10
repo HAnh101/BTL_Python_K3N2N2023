@@ -35,19 +35,24 @@ def initDef():
         if(len(employeeInDepartment.fetchall()) < employeeEachDepartment):
             return departmentId
         else:
-            departmentIdNew = int(np.ceil(department *(employeeEachDepartment) * np.random.random()))
+            departmentIdNew = int(np.ceil((department *employeeEachDepartment) * np.random.random()))
             employeeEachDepartmentNew = employeeEachDepartment
             departmentNew = department
             return departmentIsReady(departmentIdNew, employeeEachDepartmentNew, departmentNew)
         
+    salary = 10000
+    
     def setEmployeeToDepartment(departmentId):
         firstName = firstNameList[int(np.floor(len(firstNameList) * np.random.random()))]
         middleName =  middleNameList[int(np.floor(len(middleNameList) * np.random.random()))]
         lastName = random.choices(string.ascii_uppercase, k=1)
-        c.execute('''INSERT INTO "employee"("name", "departmentId") VALUES (?, ?)''', [f'{firstName} {middleName} {lastName[0]}', departmentId])
+        # c.execute('''INSERT INTO "employee"("salary") VALUES (?)''', salary)
+        rate = np.random.randint(1, high=5)
+        # c.execute('''INSERT INTO "employee"("rate") VALUES (?)''', rate)
+        c.execute('''INSERT INTO "employee"("name", "departmentId", "salary", "rate") VALUES (?, ?, ?, ?)''', [f'{firstName} {middleName} {lastName[0]}', departmentId, salary, rate])
 
     for eachEmployee in range (0, employeeSum):
-        departmentId = int(np.ceil(department *(employeeEachDepartment) * np.random.random()))
+        departmentId = int(np.ceil(department *(employeeEachDepartment) / np.random.random()))
         setEmployeeToDepartment(departmentIsReady(departmentId, employeeEachDepartment, department))
 
     listProject = [
@@ -62,32 +67,46 @@ def initDef():
         ["Giáo dục công dân"],
         ["Thể dục"]
     ]
-    c.executemany('''INSERT INTO "project"("name") VALUES (?)''', listProject)
+    statusList = ["Đạt", "Không đạt"]
+    # status = "Đạt"
+    # c.execute('''INSERT INTO "project"("status") VALUES (?)''', status)
+    # c.executemany('''INSERT INTO "project"("name") VALUES (?)''', listProject)
+    
+    def setProject(projectId):
+        name = listProject[int(np.floor(len(listProject) * np.random.random()))]
+        status = statusList[int(np.floor(len(statusList) * np.random.random()))]
+        # c.execute('''INSERT INTO "employee"("salary") VALUES (?)''', salary)
+        # c.execute('''INSERT INTO "employee"("rate") VALUES (?)''', rate)
+        c.execute('''INSERT INTO "project"("name", "status") VALUES (?, ?)''', [f'{name}', status])
 
-    salary = 10000
-    c.execute('''INSERT INTO "employee"("salary") VALUES (10000)''', salary)
-    rate = np.random.randint(1, high=5)
-    c.execute('''INSERT INTO "employee"("rate") VALUES (?)''', rate)
+    for eachEmployee in range (0, employeeSum):
+        projectId = np.random.randint(1, high=5)
+        setProject(projectId)
+
+    # salary = 10000
+    # c.execute('''INSERT INTO "employee"("salary") VALUES (?)''', salary)
+    # rate = np.random.randint(1, high=5)
+    # c.execute('''INSERT INTO "employee"("rate") VALUES (?)''', rate)
     positionList = ["Trưởng nhóm", "Thành viên"]
 
     for employee in range(0, employeeSum):
         projectLen = c.execute('''SELECT * FROM "project" ''')
         for project in range(0, len(projectLen.fetchall())):
-            position = random.choice(positionList)   
+            position = random.choice(positionList)
             salaryProject = 2000
             bonus = np.random.randint(100, high=500)
             finalSalary = salary + salaryProject + bonus
             
-            c.execute('''INSERT INTO "participate"("employeeId","projectId", "position", "salaryProject", "bonus", "finalSalary") VALUES (?,?,?,?,?,?)''', 
+            c.execute('''INSERT INTO "participate"("employeeid","projectid", "position", "salaryProject", "bonus", "finalSalary") VALUES (?,?,?,?,?,?)''', 
                       [employee+1, project +1, position, salaryProject, bonus, finalSalary])
         
     # project = 30
-    # projectId = np.random.randint(1, hight=project)
+    # projectId = np.random.randint(1, hight=projec)
     # c.execute('''INSERT INTO "project"("id") VALUES (?)''', projectId)
     
-    statusList = ["Đạt", "Không đạt"]
-    status = random.choice(statusList)
-    c.execute('''INSERT INTO "project"("status") VALUES (?)''', status)
+    # statusList = ["Đạt", "Không đạt"]
+    # status = random.choice(statusList)
+    # c.execute('''INSERT INTO "project"("status") VALUES (?)''', status)
  
     connect.commit()
     connect.close()
