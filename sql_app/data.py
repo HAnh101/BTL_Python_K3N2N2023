@@ -32,6 +32,31 @@ class ProjectMethod:
     def get_project_name(db:Session, name: str):
         return db.query(models.Project).filter(models.Project.name == name).all()
     
+    def get_project(db:Session, id: Union[str, None] = None, name: Union[str, None] = None, status: Union[str, None] = None):
+        return db.query(models.Project).filter(
+            or_(
+                models.Project.id == id, 
+                models.Project.name == name,
+                models.Project.status == status,
+            )
+        ).all()  
+
+    def update_project(db: Session, project: schemas.Department):
+        db_project_update = db.query(models.Project).filter(
+            and_(
+                models.Project.id == project.projectid
+            )
+        ).update({
+            'name': project.projectName,
+            'status': project.projectStatus,
+        })
+        db.commit()
+        return db.query(models.Project).filter(
+            and_(
+                models.Project.id == project.projectid
+            )
+        ).first()
+    
 class ParticipateMethod:
     def create_participate(db: Session, participate: schemas.ParticipateCreate):
         db_participate = models.Participate(
@@ -78,7 +103,7 @@ class DepartmentMethod:
     def update_department(db: Session, department: schemas.Department):
         db_department_update = db.query(models.Department).filter(
             and_(
-                models.Department.id == department.departmentId
+                models.Department.id == department.departmentid
             )
         ).update({
             'name': department.departmentName,
@@ -86,7 +111,7 @@ class DepartmentMethod:
         db.commit()
         return db.query(models.Department).filter(
             and_(
-                models.Department.id == department.departmentId
+                models.Department.id == department.departmentid
             )
         ).first()
 
