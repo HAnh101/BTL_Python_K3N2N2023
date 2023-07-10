@@ -113,7 +113,7 @@ class DepartmentMethod:
         return db.query(models.Project.name.label('Phòng ban'),
                         func.avg(models.Participate.finalSalary).label('Lương tháng trung bình')
                         ).filter(
-                            and_(models.Department.id == department.departmentId)
+                            and_(models.Department.id == department.id)
                         ).group_by(models.Department.id).all()
     
 
@@ -129,11 +129,11 @@ class FinalSalaryAndRate:
         return db.query(models.Employee.name.label('Họ và Tên'),
                         models.Participate.finalSalary.label('Lương tháng'),
                         models.Employee.rate.label('Đánh giá')
-                        ).order_by((models.Participate.finalSalary).desc, (models.Employee.rate).desc).all()
+                        ).order_by((models.Participate.finalSalary).desc(), (models.Employee.rate).desc()).all()
     def get_listFinalSalary(db: Session):
         return db.query(
             models.Employee.name.label('Họ và Tên'),
             models.Participate.finalSalary.label('Lương tháng'),
-        ).order_by((models.Participate.finalSalary).desc).all()
+        ).order_by((models.Participate.finalSalary).desc()).all()
     
 
