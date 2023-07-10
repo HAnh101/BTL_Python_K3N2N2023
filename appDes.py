@@ -13,7 +13,7 @@ tags_metadata = [
     }, 
     {
         "name" : " Ngọc Anh Numpy", 
-        "description" : "Cập nhập thông tin Lương tháng và lấy lương tổng kết năm của một nhân viên"
+        "description" : "Cập nhập thông tin Lương tháng và lấy lương tổng kết tháng của một nhân viên"
     }, 
     {
         "name" : " Ngọc Anh Pandas",
@@ -51,12 +51,12 @@ descriptionApi = {
         "TimKiemNhanVien": "Nhập một trong các thông tin cá nhân của nhân viên để nhận lại thông tin của bảng chứa các thông tin cần tìm"
     },
     "NgocAnhNp" : {
-        "LuongTongKetNamCuaNhanVien": "Nhập mã nhân viên để nhận lại tổng lương tháng một năm của nhân viên(Tổng lương của tất cả các dự án đã tham gia)",
+        "LuongTongKetThangCuaNhanVien": "Nhập mã nhân viên để nhận lại tổng lương tháng của nhân viên(Tổng lương của tất cả các dự án đã tham gia)",
         "CapNhatLuongTheoThang": "Nhập các thông tin: employeeid, projectid, lương cứng, lương tham gia dự án sau đó sẽ tự động cập nhật thông tin của nhân viên ở mã dự án đó trong cơ sở dữ liệu"
     },
     'LinhNP' : {
         'BangXepHang' : 'Hiện bảng xếp hạng lương tháng của nhân viên và đánh giá năng lực tương ứng',
-        'CapNhatDanhGiaNhanVien' : 'Nhập các thông tin: employeeid sau đó sẽ tự động cập nhật thông tin đánh giá của nhân viên trong cơ sở dữ liệu'
+        'CapNhatDanhGiaNhanVien' : 'Nhập các thông tin: employeeid, rate (muốn cập nhật) sau đó sẽ tự động cập nhật thông tin đánh giá của nhân viên trong cơ sở dữ liệu'
     },
     'LinhPD' : {
         'DanhSachNhanVienTop' : 'Hiển thị top 10 những nhân viên có lương tháng cao nhất trong tháng',
