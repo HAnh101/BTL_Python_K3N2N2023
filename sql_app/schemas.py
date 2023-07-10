@@ -79,23 +79,8 @@ class ProjectSalary(ProjectBase):
     class Config:
         orm_mode = True
 
-class EmployeeFind(BaseModel):
-    employeeid: Union[int, None] = None
-    employeeName: Union[str, None] = None
-    employeeFinalSalary: Union[int, None] = None
-    employeeRate: Union[int, None] = None
-    employeeBonus: Union[int, None] = None
-    employeePosition: Union[str, None] = None
-    employeeSalaryProject: Union[int, None] = None
-    departmentName: Union[str, None] = None
-    projectName: Union[str, None] = None
-
-class ProjectEmployeeBase(BaseModel):
-    employeeid : int
-    projectid: int
-    class Config:
-        orm_mode = True
-
-class ProjectSalaryUpdate(ProjectEmployeeBase):
-    employeeSalary: int
-    projectSalary: int
+class EmployeeRate(BaseModel):
+    id: int
+    rate: int
+class avgSalaryDepartment(BaseModel):
+    id: int
