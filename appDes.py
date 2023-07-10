@@ -17,7 +17,7 @@ tags_metadata = [
     }, 
     {
         "name" : " Ngọc Anh Pandas",
-        "description" : "Thống kê Lương tháng của từng nhân viên theo mã dự án tham gia và Tìm kiếm thông tin nhân viên"
+        "description" : "Thống kê Lương thưởng tháng của từng dự án và Tìm kiếm thông tin nhân viên"
     },
     {
         'name' : 'Hoàng Anh Pandas',
