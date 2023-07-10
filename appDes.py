@@ -56,7 +56,7 @@ descriptionApi = {
     },
     'LinhNP' : {
         'BangXepHang' : 'Hiện bảng xếp hạng lương tháng của nhân viên và đánh giá năng lực tương ứng',
-        '' : ''
+        'CapNhatDanhGiaNhanVien' : 'Nhập các thông tin: employeeid sau đó sẽ tự động cập nhật thông tin đánh giá của nhân viên trong cơ sở dữ liệu'
     },
     'LinhPD' : {
         'DanhSachNhanVienTop' : 'Hiển thị top 10 những nhân viên có lương tháng cao nhất trong tháng',

@@ -1,4 +1,3 @@
-from kiwisolver import Constraint
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, REAL
 from sqlalchemy.orm import relationship
 from database import Base
@@ -31,8 +30,6 @@ class Participate(Base):
     salaryProject = Column(REAL, index=True, nullable=False)
     bonus = Column(REAL, index=True, nullable=False)
     finalSalary = Column(REAL, index=True, nullable=False)
-    # Constraint UC_Participate UNIQUE (ID,LastName)
-
 
     employeeParticipate = relationship("Employee", back_populates="participateIn")
     projects = relationship("Project", back_populates="projectParticipate")

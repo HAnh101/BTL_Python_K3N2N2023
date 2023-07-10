@@ -26,7 +26,7 @@ app = FastAPI(
     openapi_tags=appDes.tags_metadata
 )
 
-initDef()
+# initDef()
 
 @app.get('/', response_class=HTMLResponse, tags=['Trang chủ'])
 def home():
