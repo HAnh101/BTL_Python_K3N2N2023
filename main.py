@@ -11,6 +11,8 @@ from fastapi.templating import Jinja2Templates
 from database import SessionLocal, engine, get_db
 from sql_app.default import initDef 
 from fastapi.responses import HTMLResponse
+import webbrowser
+import os
 
 templates = Jinja2Templates(directory="pages/")
 models.Base.metadata.create_all(bind=engine)
@@ -93,3 +95,90 @@ def get_employee_salary_project(
         })
 
 # endregion
+
+# Region Linh
+#np
+@app.get('/statistic/ranking',
+         tags = ['Linh Numpy'],
+         description=appDes.descriptionApi['LinhNP']['BangXepHang'])
+
+def get_ranking(
+    db: Session = Depends(get_db)
+):
+    salaryAndRateBoard = data.FinalSalaryAndRate.get_list(db)
+    df = pd.DataFrame.from_dict(salaryAndRateBoard)
+    df['Xếp loại'] = get_evaluation(df['Đánh giá'])
+    table = pd.DataFrame.from_dict(df).to_html()
+    text_file = open("employee_list.html", "w", encoding='uft8')
+    text_file.write(table)
+    text_file.close()
+    webbrowser.open(os.getcwd() + '/employee_list.html')
+    
+    return HTMLResponse(content=table, status_code=200)
+
+@np.vectorize
+def get_evaluation(rate):
+    if rate == 5: 
+        return 'Xuất sắc'
+    elif rate > 2:
+        return 'Tốt'
+    else:
+        return 'Trung bình'
+    
+@app.post('/Update/Rate',
+         tags = ['Linh Numpy'],
+         description=appDes.descriptionApi['LinhNP']['CapNhatDanhGiaNhanVien'])
+def updateRate(
+    employee: schemas.EmployeeRate,
+    db: Session = Depends(get_db)
+):
+    result = " "
+    if(employee.id > 0):
+        updateRate = data.EmployeeMethod.update_rate(db,schemas.EmployeeRate(
+            id = employee.id,
+            rate = employee.rate
+        ))
+        result = data.EmployeeMethod.get_rate(db, employee.id)
+    else:
+        result = {
+            "field": "classid",
+            "errMsg": "Thông tin không hợp lệ"
+        }
+    return result
+#pd
+
+@app.get('/statistic/top10',
+         tags = ['Linh Pandas'],
+         description=appDes.descriptionApi['LinhPD']['DanhSachNhanVienTop'])
+def get_top10(db: Session = Depends(get_db)):
+    salaryBoard = data.FinalSalaryAndRate.get_listFinalSalary(db)
+    df = pd.DataFrame.from_dict(salaryBoard).head(10)
+    table = pd.DataFrame.from_dict(df).to_html()
+    text_file = open("employee_list.html", "w", encoding='uft8')
+    text_file.write(table)
+    text_file.close()
+    webbrowser.open(os.getcwd() + '/employee_list.html')
+    
+    return HTMLResponse(content=table, status_code=200)
+
+@app.post('/Department/avgFinalSalary',
+         tags = ['Linh Pandas'],
+         description=appDes.descriptionApi['LinhPD']['LuongTrungBinhPhongBan'])
+def avgFinalSalary(
+    department: schemas.avgSalaryDepartment,
+    db: Session = Depends(get_db)
+):
+    if(department.id != None):
+        avgSalary = data.DepartmentMethod.get_avgFinalSalary_department(db, schemas.avgSalaryDepartment(id=department.id))
+        df= pd.DataFrame.from_dict(avgSalary)
+        nameD = df['Phòng ban'][0]
+        LuongTB = df['Lương tháng trung bình'][0]
+        
+    else:
+        result = {
+            "field": "departmentId",
+            "errMsg": "Thông tin không hợp lệ"
+        }
+    return f'Lương tháng trung bình của {nameD} là {LuongTB}'
+
+# endRegion

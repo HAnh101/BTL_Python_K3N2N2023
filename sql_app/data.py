@@ -14,6 +14,23 @@ class EmployeeMethod:
         return db_employee
     def get_by_id(db: Session, employeeId: int):
         return db.query(models.Employee.id.label("ID"), models.Employee.name.label("Name")).filter(models.Employee.id == employeeId).all()
+    def get_rate(db: Session, employeeId: int):
+        return db.query(models.Employee.id.label("ID"), models.Employee.rate.label("Rate")).filter(models.Employee.id == employeeId).all()
+
+    def update_rate(db: Session, employee: schemas.EmployeeRate):
+        db_rate_update = db.query(models.Employee).filter(
+            and_(
+                models.Employee.id == employee.id
+            )
+        ).update({
+            'rate': employee.rate
+        })
+        db.commit()
+        return db.query(models.Employee).filter(
+            and_(
+                models.Employee.id == employee.id
+            )
+        ).first()
 
 class ProjectMethod:
     def create_project(db: Session, project : schemas.ProjectBase):
@@ -91,6 +108,14 @@ class DepartmentMethod:
 
     def get_all(db:Session):
         return db.query(models.Department).all()
+    
+    def get_avgFinalSalary_department(db: Session, department: schemas.avgSalaryDepartment):
+        return db.query(models.Project.name.label('Phòng ban'),
+                        func.avg(models.Participate.finalSalary).label('Lương tháng trung bình')
+                        ).filter(
+                            and_(models.Department.id == department.departmentId)
+                        ).group_by(models.Department.id).all()
+    
 
 
 class ProjectAndEmployeeMethod:
@@ -98,4 +123,17 @@ class ProjectAndEmployeeMethod:
         return db.query(models.Employee.id.label('Mã nhân viên'),
                         models.Project.name.label('Phòng ban'),
                         models.Participate.finalSalary.label('Tổng lương tháng')).join(models.Employee).join(models.Project).filter(models.Employee.id == employeeid).all()
+
+class FinalSalaryAndRate:
+    def get_list(db: Session):
+        return db.query(models.Employee.name.label('Họ và Tên'),
+                        models.Participate.finalSalary.label('Lương tháng'),
+                        models.Employee.rate.label('Đánh giá')
+                        ).order_by((models.Participate.finalSalary).desc, (models.Employee.rate).desc).all()
+    def get_listFinalSalary(db: Session):
+        return db.query(
+            models.Employee.name.label('Họ và Tên'),
+            models.Participate.finalSalary.label('Lương tháng'),
+        ).order_by((models.Participate.finalSalary).desc).all()
     
+

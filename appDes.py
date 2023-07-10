@@ -17,7 +17,7 @@ tags_metadata = [
     }, 
     {
         "name" : " Ngọc Anh Pandas",
-        "description" : "Thống kê Lương thưởng tháng của từng dự án và Tìm kiếm thông tin nhân viên"
+        "description" : "Thống kê Lương tháng của từng nhân viên theo mã dự án tham gia và Tìm kiếm thông tin nhân viên"
     },
     {
         'name' : 'Hoàng Anh Pandas',
@@ -47,7 +47,7 @@ tags_metadata = [
 
 descriptionApi = {
     "NgocAnhPd": { 
-        "ThongKeLuongThuongThang" : "Nhập mã dự án để nhận lại thông tin trả về là 1 bảng lương thưởng của từng dự án. projectid mang giá trị số nguyên dương",
+        "ThongKeLuongThang" : "Nhập mã nhân viên để nhận lại thông tin trả về là 1 bảng lương của từng dự án mà nhân viên ấy đã tham gia. projectid mang giá trị số nguyên dương",
         "TimKiemNhanVien": "Nhập một trong các thông tin cá nhân của nhân viên để nhận lại thông tin của bảng chứa các thông tin cần tìm"
     },
     "NgocAnhNp" : {

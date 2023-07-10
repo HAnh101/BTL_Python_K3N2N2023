@@ -78,3 +78,9 @@ class ProjectSalary(ProjectBase):
     projectId: int
     class Config:
         orm_mode = True
+
+class EmployeeRate(BaseModel):
+    id: int
+    rate: int
+class avgSalaryDepartment(BaseModel):
+    id: int
