@@ -20,6 +20,11 @@ class ProjectBase(BaseModel):
 class ProjectCreate(ProjectBase):
     pass
 
+class Project(BaseModel):
+    projectid: int
+    projectName: str
+    projectStatus: str
+
 class ParticipateBase(BaseModel):
     employeeId: int
     projectId: int
@@ -84,3 +89,24 @@ class EmployeeRate(BaseModel):
     rate: int
 class avgSalaryDepartment(BaseModel):
     id: int
+
+class EmployeeFind(BaseModel):
+    employeeid: Union[int, None] = None
+    employeeName: Union[str, None] = None
+    employeeFinalSalary: Union[str, None] = None
+    employeeRate: Union[str, None] = None
+    employeeBonus: Union[int, None] = None
+    employeePosition: Union[str, None] = None
+    employeeSalaryProject: Union[int, None] = None
+    departmentName: Union[str, None] = None
+    projectName: Union[str, None] = None
+
+class ProjectEmployeeBase(BaseModel):
+    employeeid : int
+    projectid: int
+    class Config:
+        orm_mode = True
+
+class ProjectSalaryUpdate(ProjectEmployeeBase):
+    employeeSalary: int
+    projectSalary: int

@@ -75,7 +75,7 @@ def get_employee_salary_project(
             df = pd.DataFrame.from_dict(employeeInDepartment)
             df['Tổng lương tháng'] = df['Tổng lương tháng']
             luong = df['Tổng lương tháng'].tolist()
-            project = df['Phòng ban'].to_list()
+            project = df['Dự án'].to_list()
             maNV = df['Mã nhân viên'][0]
             project.insert(0, 'Mã nhân viên')
             luong.insert(0, maNV)
