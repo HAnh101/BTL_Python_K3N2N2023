@@ -110,7 +110,7 @@ class DepartmentMethod:
         return db.query(models.Department).all()
     
     def get_avgFinalSalary_department(db: Session, department: schemas.avgSalaryDepartment):
-        return db.query(models.Project.name.label('Phòng ban'),
+        return db.query(models.Department.name.label('Phòng ban'),
                         func.avg(models.Participate.finalSalary).label('Lương tháng trung bình')
                         ).filter(
                             and_(models.Department.id == department.id)
