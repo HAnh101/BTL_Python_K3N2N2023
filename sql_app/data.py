@@ -155,6 +155,11 @@ class ProjectAndEmployeeMethod:
                         models.Project.name.label('Dự án'),
                         models.Participate.finalSalary.label('Tổng lương tháng')).join(models.Employee).join(models.Project).filter(models.Employee.id == employeeid).all()
 
+    def get_project_salary(db: Session, projectid: Union[int, None]):
+        return db.query(models.Employee.id.label('Mã nhân viên'),
+                        models.Project.name.label('Dự án'),
+                        models.Participate.finalSalary.label('Tổng lương tháng')).join(models.Employee).join(models.Project).filter(models.Project.id == projectid).all()
+
 class BonusProjectMethod:
     def get_all_bonus(db: Session, projectid: Union[int, None]):
         return db.query(models.Employee.id.label('Mã nhân viên'),
@@ -209,12 +214,12 @@ class FinalSalaryAndRate:
                         models.Employee.name.label('Họ và Tên'),
                         models.Participate.finalSalary.label('Lương tháng'),
                         models.Employee.rate.label('Đánh giá')
-                        ).order_by((models.Participate.finalSalary).desc(), (models.Employee.rate).desc()).all()
+                        ).filter(models.Employee.id == models.Participate.employeeId).group_by(models.Employee.id).order_by((models.Employee.rate).desc(),(models.Participate.finalSalary).desc()).all()
     
     def get_listFinalSalary(db: Session):
         return db.query(
             models.Employee.name.label('Họ và Tên'),
             models.Participate.finalSalary.label('Lương tháng'),
-        ).order_by((models.Participate.finalSalary).desc()).all()
+        ).filter(models.Employee.id == models.Participate.employeeId).group_by(models.Employee.id).order_by((models.Participate.finalSalary).desc()).all()
     
 

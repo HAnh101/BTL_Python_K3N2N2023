@@ -21,7 +21,7 @@ tags_metadata = [
     },
     {
         'name' : 'Hoàng Anh Pandas',
-        "description": 'Hiển thị bảng lương của nhân viên theo mã nhân viên và Cập nhập mã dự án tham gia (thêm/xóa nhân viên khỏi một dự án)'
+        "description": 'Hiển thị bảng lương của nhân viên theo mã nhân viên và Cập nhập tên dự án, trạng thái dự án theo mã dự án'
     },
     {
         'name' : 'Hoàng Anh Numpy', 
@@ -64,7 +64,7 @@ descriptionApi = {
     },
     'HoangAnhPandas': {
         'LuongCuaNhanVien': 'Nhập mã nhân viên để có thể xem bảng lương của nhân viên đó',
-        'CapNhatDuAn': 'Cho phép người dùng đổi mã dự án, đổi nhân viên tham gia dự án theo projectid'
+        'CapNhatDuAn': 'Cho phép người dùng đổi tên dự án, đổi trạng thái của dự án theo projectid'
     },
     'HoangAnhNumpy':{
         'LuongTrungBinhDuAn': 'Nhập mã dự án để có thể xem được lương tháng trung bình của dự án',

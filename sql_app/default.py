@@ -70,19 +70,63 @@ def initDef():
     ]
     statusList = ["Hoàn thành", "Chưa hoàn thành"]
     
+    # def setProject():
+    #     name = listProject[int(np.floor(len(listProject) * np.random.random()))]
+    #     status = statusList[int(np.floor(len(statusList) * np.random.random()))]
+    #     c.execute('''INSERT INTO "project"("name", "status") VALUES (?, ?)''', [f'{name}', status])
+    
+
+    # def ProjectIsReady(projectId, ProjectEachEmployee, project):
+    #     employeeInDepartment = c.execute('''SELECT * FROM "employee" WHERE departmentId == ?''', [departmentId])
+    
+    #     if(len(employeeInDepartment.fetchall()) < employeeEachDepartment):
+    #         return departmentId
+    #     else:
+    #         departmentIdNew = int(np.ceil((department *employeeEachDepartment) * np.random.random()))
+    #         employeeEachDepartmentNew = employeeEachDepartment
+    #         departmentNew = department
+    #         return departmentIsReady(departmentIdNew, employeeEachDepartmentNew, departmentNew)
+    
     def setProject():
         name = listProject[int(np.floor(len(listProject) * np.random.random()))]
         status = statusList[int(np.floor(len(statusList) * np.random.random()))]
-        c.execute('''INSERT INTO "project"("name", "status") VALUES (?, ?)''', [f'{name}', status])
+        c.execute('''INSERT INTO "project"("name", "status") VALUES (?, ?)''', [ f'{name}', status])
+
     
+    for eachProject in range(0, len(listProject)-1):
+        setProject()
+    # if(name > len(listProject)):
+    #     name = listProject[int(np.floor(len(listProject) * np.random.random()))]
+
     # setProject()
 
     positionList = ["Trưởng nhóm", "Thành viên"]
     # bonusList = [250,555,999,500]
 
+    # for employee in range(0, employeeSum):
+    #     projectLen = c.execute('''SELECT * FROM "project" ''')
+
+    #     projectEachEmployee = random.choice(projectLen)
+    #     for project in range(0, len(projectLen.fetchall())):
+    #         position = random.choice(positionList)
+    #         salaryProject = 2000
+    #         bonus = np.random.randint(100, high=500)
+    #         # bonus = random.choice(bonusList)
+    #         finalSalary = salary + salaryProject + bonus
+            
+    #         c.execute('''INSERT OR REPLACE INTO "participate"("employeeid","projectid", "position", "salaryProject", "bonus", "finalSalary") VALUES (?,?,?,?,?,?)''', 
+    #                   [employee+1, project +1, position, salaryProject, bonus, finalSalary])
+
+    def testProject(project):
+        for projectid in range(0, len(listProject)):
+            if(projectid == project):
+                return projectid                
+
     for employee in range(0, employeeSum):
-        projectLen = c.execute('''SELECT * FROM "project" ''')
-        for project in range(0, len(projectLen.fetchall())):
+        for projectEachEmployee in range(0,3):
+            projectLen = c.execute('''SELECT * FROM "project" ''')
+            project = int(np.floor(len(listProject) * np.random.random()))
+            projectid = testProject(project)
             position = random.choice(positionList)
             salaryProject = 2000
             bonus = np.random.randint(100, high=500)
@@ -90,7 +134,8 @@ def initDef():
             finalSalary = salary + salaryProject + bonus
             
             c.execute('''INSERT OR REPLACE INTO "participate"("employeeid","projectid", "position", "salaryProject", "bonus", "finalSalary") VALUES (?,?,?,?,?,?)''', 
-                      [employee+1, project +1, position, salaryProject, bonus, finalSalary])
- 
+                        [employee+1, projectid, position, salaryProject, bonus, finalSalary])
+
+
     connect.commit()
     connect.close()

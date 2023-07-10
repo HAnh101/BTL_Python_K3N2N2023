@@ -28,7 +28,7 @@ app = FastAPI(
     openapi_tags=appDes.tags_metadata
 )
 
-initDef()
+# initDef()
 
 @app.get('/', response_class=HTMLResponse, tags=['Trang chủ'])
 def home():
@@ -113,6 +113,27 @@ def post_project(project: schemas.Project, db : Session = Depends(get_db)):
             "errMsg": "Thông tin không hợp lệ"
         }
     return result
+
+#np
+@app.get('/project/LuongTrungBinhDuAn/{projectid}', 
+         tags= ['Hoàng Anh Numpy'], 
+         description=appDes.descriptionApi['HoangAnhNumpy']['LuongTrungBinhDuAn'])
+def get_Project_Avg_Salary(
+    projectid: Union[int, None] = None,
+    db: Session = Depends(get_db)
+):
+    if projectid > 0 :
+        ProjectSalary = data.ProjectAndEmployeeMethod.get_project_salary(db, projectid= projectid)
+        df = pd.DataFrame.from_dict(ProjectSalary)
+        project = df['Dự án'][0]
+        luongTK= np.array([df['Tổng lương tháng']])
+        luong = np.round(np.mean(luongTK), 1)
+        return f'Lương trung bình của nhân viên trong dự án {project} là {luong}'
+    else:
+        raise HTTPException(status_code=404, detail={
+            "field": "projectid",
+            "errMsg": "Thông tin không hợp lệ"
+            })
 
 # endregion
 #region Ngoc Anh
