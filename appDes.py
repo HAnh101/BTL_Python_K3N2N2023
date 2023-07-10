@@ -64,7 +64,7 @@ descriptionApi = {
     },
     'HoangAnhPandas': {
         'LuongCuaNhanVien': 'Nhập mã nhân viên để có thể xem bảng lương của nhân viên đó',
-        'CapNhatMaDuAn': 'Cho phép người dùng đổi mã dự án, đổi nhân viên tham gia dự án theo projectid'
+        'CapNhatDuAn': 'Cho phép người dùng đổi mã dự án, đổi nhân viên tham gia dự án theo projectid'
     },
     'HoangAnhNumpy':{
         'LuongTrungBinhDuAn': 'Nhập mã dự án để có thể xem được lương tháng trung bình của dự án',
