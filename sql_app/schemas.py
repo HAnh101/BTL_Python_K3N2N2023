@@ -62,7 +62,7 @@ class Department(BaseModel):
     departmentName: str
     departmentid: int
 
-class DepartmentAndProject(BaseModel):
+class EmployeeAndProject(BaseModel):
     projectid: int
     class Config:
         orm_mode = True

@@ -480,11 +480,11 @@ def Send_id_getProject(
         raise HTTPException(status_code= 404, detail= f"Mã dự án {projectID.projectID} không tồn tại!")
 
 #pd
-@app.post('/statistic/project/rate/{projectid}',
+@app.post('/statistic/project/rate',
             tags=['Lan Pandas'],
             description=appDes.descriptionApi['LanPandas']['ThongTinNVNanglucCaoVaThapNhat'])
 
-def post_rate(projectAndRate: schemas.DepartmentAndProject, db: Session = Depends(get_db)):
+def post_rate(projectAndRate: schemas.EmployeeAndProject, db: Session = Depends(get_db)):
     resProject = data.ProjectAndEmployeeAndRateMethod.get_all_rate(db,projectAndRate)
     df = pd.DataFrame.from_dict(resProject)
     if (projectAndRate.projectid <0 or  projectAndRate.projectid == None ):

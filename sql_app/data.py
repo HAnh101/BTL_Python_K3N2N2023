@@ -301,18 +301,16 @@ class RateMethod:
 
 class getEmployeeInProject:
     def getEmp(projectID:int, db:Session):
-        return db.query(models.Employee).join(models.Project).filter(models.Project.id==projectID).all()
+        return db.query(models.Employee).join(models.Participate).join(models.Project).filter(models.Participate.projectId==projectID).all()
     
 class ProjectAndEmployeeAndRateMethod:
-    def get_all_rate(db:Session, departmentProject:schemas.DepartmentAndProject):
+    def get_all_rate(db:Session, projectId:schemas.EmployeeAndProject):
         return db.query(
             models.Employee.name.label('Họ và Tên'),
             models.Project.name.label('Dự án'),
-             models.Department.name.label("Phòng ban"),
-             models.Employee.rate.label("Đánh giá")
-             ).select_from(models.Employee).join(models.Department).join(models.Participate).join(
-            models.Project).filter(and_(
-                                        models.Employee.salary==departmentProject.salary,
-                                        models.Participate.projectId==departmentProject.projectid)).all()
+            models.Employee.rate.label("Đánh giá")
+            ).select_from(models.Employee).join(models.Participate).join(models.Project).filter(
+            and_(
+                models.Participate.projectId==projectId.projectid)).all()
     
 
