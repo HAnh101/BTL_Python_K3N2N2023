@@ -14,16 +14,30 @@ class EmployeeMethod:
         return db_employee
     def get_by_id(db: Session, employeeId: int):
         return db.query(models.Employee.id.label("ID"), models.Employee.name.label("Name")).filter(models.Employee.id == employeeId).all()
-    def get_rate(db: Session, employeeId: int):
-        return db.query(models.Employee.id.label("ID"), models.Employee.rate.label("Rate")).filter(models.Employee.id == employeeId).all()
 
-    def update_rate(db: Session, employee: schemas.EmployeeRate):
+class RateMethod:
+    def create_Rate(db: Session, employee: schemas.EmployeeRate):
+        db_rEmployee = models.Employee( rate = employee.rate)
+        db.add(db_rEmployee)
+        db.commit()
+        db.refresh(db_rEmployee)
+        return db_rEmployee
+    
+    def get_rate(db:Session, id: Union[int, None] = None, rate: Union[int, None] = None):
+        return db.query(models.Employee).filter(
+            or_(
+                models.Employee.id== id, 
+                models.Employee.rate == rate, 
+            )
+        ).all()
+    
+    def update_Rate(db: Session, employee: schemas.EmployeeRate):
         db_rate_update = db.query(models.Employee).filter(
             and_(
                 models.Employee.id == employee.id
             )
         ).update({
-            'rate': employee.rate
+            'rate': employee.rate,
         })
         db.commit()
         return db.query(models.Employee).filter(
@@ -31,6 +45,9 @@ class EmployeeMethod:
                 models.Employee.id == employee.id
             )
         ).first()
+    
+    def get_all(db:Session):
+        return db.query(models.Employee).all()
 
 class ProjectMethod:
     def create_project(db: Session, project : schemas.ProjectBase):
@@ -45,6 +62,34 @@ class ProjectMethod:
     
     def get_project_id(db:Session, id: int):
         return db.query(models.Project).filter(models.Project.id == id).all()
+    
+    def get_project_name(db:Session, name: str):
+        return db.query(models.Project).filter(models.Project.name == name).all()
+
+    def get_project(db:Session, id: Union[str, None] = None, name: Union[str, None] = None, status: Union[str, None] = None):
+        return db.query(models.Project).filter(
+            or_(
+                models.Project.id == id, 
+                models.Project.name == name,
+                models.Project.status == status,
+            )
+        ).all()  
+
+    def update_project(db: Session, project: schemas.Department):
+        db_project_update = db.query(models.Project).filter(
+            and_(
+                models.Project.id == project.projectid
+            )
+        ).update({
+            'name': project.projectName,
+            'status': project.projectStatus,
+        })
+        db.commit()
+        return db.query(models.Project).filter(
+            and_(
+                models.Project.id == project.projectid
+            )
+        ).first()
     
 class ParticipateMethod:
     def create_participate(db: Session, participate: schemas.ParticipateCreate):
@@ -73,6 +118,15 @@ class ParticipateMethod:
             )
         ).all()
     
+    def get_employee_projectSalary(db: Session, participate: schemas.ParticipateBase):
+        return db.query(models.Employee.name.label('Họ tên'),
+                        models.Project.name.label('Dự án'),
+                        models.Participate.finalSalary.label('Lương tháng')).join(models.Employee).join(models.Project).filter(
+            and_(
+                models.Participate.employeeId == participate.employeeId,
+                models.Participate.projectId == participate.projectId
+            )
+        ).all()
     
 
 class DepartmentMethod:
@@ -118,11 +172,67 @@ class DepartmentMethod:
     
 
 
+    def get_all(db:Session):
+        return db.query(models.Department).all()
+
 class ProjectAndEmployeeMethod:
     def get_all_employee(db: Session, employeeid: Union[int, None]):
         return db.query(models.Employee.id.label('Mã nhân viên'),
-                        models.Project.name.label('Phòng ban'),
+                        models.Project.name.label('Dự án'),
                         models.Participate.finalSalary.label('Tổng lương tháng')).join(models.Employee).join(models.Project).filter(models.Employee.id == employeeid).all()
+
+    def get_project_salary(db: Session, projectid: Union[int, None]):
+        return db.query(models.Employee.id.label('Mã nhân viên'),
+                        models.Project.name.label('Dự án'),
+                        models.Participate.finalSalary.label('Tổng lương tháng')).join(models.Employee).join(models.Project).filter(models.Project.id == projectid).all()
+
+class BonusProjectMethod:
+    def get_all_bonus(db: Session, projectid: Union[int, None]):
+        return db.query(models.Employee.id.label('Mã nhân viên'),
+                        models.Project.name.label('Dự án'),
+                        models.Participate.bonus.label('Lương thưởng')).join(models.Employee).join(models.Project).filter(models.Project.id == projectid).all()
+
+class EmployeeInformationMethod:
+    def find_employee(db: Session, employeeInfor: schemas.EmployeeFind):
+            return db.query(
+                models.Employee.name.label('Họ và tên'),
+                models.Department.name.label('Phòng ban'),
+                models.Project.name.label('Dự án'),                
+                models.Participate.finalSalary.label('Tổng lương tháng'),
+                models.Employee.rate.label('Đánh giá'),
+                models.Participate.bonus.label('Lương thưởng'),
+                models.Participate.position.label('Chức vụ'),
+                models.Participate.salaryProject.label('Lương trong dự án'),
+                ).select_from(models.Employee).join(models.Department).join(models.Participate).join(models.Project).filter(
+                    or_(
+                        models.Employee.id == employeeInfor.employeeid,
+                        models.Employee.name == employeeInfor.employeeName,
+                        models.Department.name == employeeInfor.departmentName,
+                        models.Project.name == employeeInfor.projectName,
+                        models.Participate.finalSalary == employeeInfor.employeeFinalSalary,
+                        models.Employee.rate == employeeInfor.employeeRate,
+                        models.Participate.bonus == employeeInfor.employeeBonus,
+                        models.Participate.position == employeeInfor.employeePosition,
+                        models.Participate.salaryProject == employeeInfor.employeeSalaryProject,
+                    )
+                ).all()
+
+class SalaryProjectSumMethod:
+    def get_all_employee(db: Session, employeeid: Union[int, None]):
+        return db.query(models.Employee.id.label('Mã nhân viên'),
+                        models.Project.name.label('Dự án'),
+                        models.Participate.salaryProject.label('Tổng lương trong dự án')).join(models.Employee).join(models.Project).filter(models.Employee.id == employeeid).all()
+
+class ProjectEmployeeMethod:
+    def get_employee(db: Session, employeeProject: schemas.ProjectEmployeeBase):
+        return db.query(models.Employee.name.label('Họ và tên'),
+                        models.Project.name.label('Dự án'),
+                        models.Participate.finalSalary.label('Tổng lương')).join(models.Employee).join(models.Project).filter(
+            and_(
+                models.Participate.employeeId == employeeProject.studentid,
+                models.Participate.projectId == employeeProject.projectid
+            )
+        ).all()
 
 class FinalSalaryAndRate:
     def get_list(db: Session):
@@ -130,11 +240,12 @@ class FinalSalaryAndRate:
                         models.Employee.name.label('Họ và Tên'),
                         models.Participate.finalSalary.label('Lương tháng'),
                         models.Employee.rate.label('Đánh giá')
-                        ).group_by(models.Employee.id).order_by((models.Participate.finalSalary).desc(), (models.Employee.rate).desc()).all()
+                        ).filter(models.Employee.id == models.Participate.employeeId).group_by(models.Employee.id).order_by((models.Employee.rate).desc(),(models.Participate.finalSalary).desc()).all()
+    
     def get_listFinalSalary(db: Session):
         return db.query(
             models.Employee.name.label('Họ và Tên'),
             models.Participate.finalSalary.label('Lương tháng'),
-        ).order_by((models.Participate.finalSalary).desc()).all()
+        ).filter(models.Employee.id == models.Participate.employeeId).group_by(models.Employee.id).order_by((models.Participate.finalSalary).desc()).all()
     
 
