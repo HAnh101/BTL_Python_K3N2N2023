@@ -107,9 +107,21 @@ class ProjectEmployeeBase(BaseModel):
     class Config:
         orm_mode = True
 
-class ProjectSalaryUpdate(ProjectEmployeeBase):
-    employeeSalary: int
+class ProjectEmployeeCreate(BaseModel):
+    employeeid : int
+    projectid: int
     projectSalary: int
+    bonusSalary: int
+    class Config:
+        orm_mode = True
+
+class ProjectSalaryUpdate(ProjectEmployeeBase):
+    projectSalary: int
+    bonusSalary: int
+
+class EmployeeBonus(BaseModel):
+    employeeid: int
+    projectid: int
 
 class sum2Project(BaseModel):
     employeeid: int

@@ -179,7 +179,6 @@ def Sum_2_project(
 # endregion
 #region Ngoc Anh
 #pd
-
 @app.get('/project/ThongKeLuongThuongThang/{projectid}', 
         tags=['Ngọc Anh Pandas'], 
         description=appDes.descriptionApi['NgocAnhPd']['ThongKeLuongThuongThang'])
@@ -189,7 +188,7 @@ def get_bonus_project(
 ):
     if(projectid > 0) :
         getProject = data.ProjectMethod.get_project_id(db, id=projectid)
-        if projectid > len(getProject):
+        if projectid < len(getProject):
             return {
                 "msg": "Không tồn tại dự án"
             }
@@ -197,7 +196,7 @@ def get_bonus_project(
             listBonusProject = data.BonusProjectMethod.get_all_bonus(db, projectid)
             if len(listBonusProject) != 0:
                 df = pd.DataFrame.from_dict(listBonusProject)
-                bonusList = df.groupby(df['Lương thưởng']).mean(numeric_only = True)
+                bonusList = df['Lương thưởng']
                 projectName = df['Dự án'][0]
                 return {
                     "msg": f"Thống kê lương thưởng theo dự án {projectName}",
@@ -212,23 +211,22 @@ def get_bonus_project(
                 "field" : "projectid",
                 "errMsg" : "Giá trị projectid không thể nhỏ hơn hoặc bằng 0"
             })
-
 @app.post('/department/TimKiemNhanVien', tags=['Ngọc Anh Pandas'], description=appDes.descriptionApi['NgocAnhPd']['TimKiemNhanVien'])
 def post_find_employee(employeeInfor: schemas.EmployeeFind, db: Session = Depends(get_db)):
     result = ""
     errorList = []
     line = 0
-    # for dict in employeeInfor:
-    #     if(line >= 2):
-    #         if dict[1] < 0:    
-    #             errorList.append({"field": dict[0], "errMsg" : "Lương nhỏ hơn 0"})
-    #         elif dict[1] > 10:
-    #             errorList.append({"field": dict[0], "errMsg" : "Lương lớn hơn 10"})
-    #     else:
-    #         if line!=1:
-    #             if dict[1] <= 0:    
-    #                 errorList.append({"field": dict[0], "errMsg" : "id Không được nhỏ hơn hoặc bằng 0"})
-    #     line +=1
+    for dict in employeeInfor:
+        if(line >= 2):
+            if dict[1] < 0:
+                d[col[0]] = row[idx]
+            elif dict[1] > 10000:
+                errorList.append({"field": dict[0], "errMsg" : "Lương lớn hơn 10000"})
+        else:
+            if line!=1:
+                if dict[1] < 0:    
+                    errorList.append({"field": dict[0], "errMsg" : "id Không được nhỏ hơn hoặc bằng 0"})
+        line +=1
     if len(errorList) > 0:
         result = errorList
     else:
@@ -245,7 +243,6 @@ def post_find_employee(employeeInfor: schemas.EmployeeFind, db: Session = Depend
                 "msg": "không có kết quả phù hợp"
             }
     return result
-
 @app.get('/project/LuongTongKetThangCuaNhanVien', tags=['Ngọc Anh Numpy'], description = appDes.descriptionApi['NgocAnhNp']['LuongTongKetThangCuaNhanVien'])
 def get_salary_project_sum_employee(
     employeeid: Union[int, None] = None,
@@ -256,11 +253,10 @@ def get_salary_project_sum_employee(
             employeeIndepartment = data.SalaryProjectSumMethod.get_all_employee(db, employeeid=employeeid);
             if np.array(employeeIndepartment).size !=0:
                 df = pd.DataFrame.from_dict(employeeIndepartment)
-
                 tongLuongDuAn = (df['Tổng lương trong dự án'].sum()).tolist()
                 empId = df['Mã nhân viên'][0]
                 return {
-                    "msg": f'Tổng lương trong dự án {empId} là: {tongLuongDuAn}',
+                    "msg": f'Tổng lương dự án của nhân viên có mã {empId} là: {tongLuongDuAn}',
                     "data": tongLuongDuAn}
             else :
                 raise HTTPException(status_code=404, detail={
@@ -277,7 +273,6 @@ def get_salary_project_sum_employee(
             "field": "employeeid",
             "errMsg": "Chưa có thông tin"
         })
-
 @app.post('/project/CapNhatLuongTheoThang', tags=['Ngọc Anh Numpy'], description = appDes.descriptionApi['NgocAnhNp']['CapNhatLuongTheoThang'])
 def post_update_salary(salaryList: schemas.ProjectSalaryUpdate ,db: Session = Depends(get_db)):
     result = ""
@@ -287,8 +282,8 @@ def post_update_salary(salaryList: schemas.ProjectSalaryUpdate ,db: Session = De
         if(line >= 2):
             if dict[1] < 0:    
                 errorList.append({"field": dict[0], "errMsg" : "Lương nhỏ hơn 0"})
-            elif dict[1] >100000:
-                errorList.append({"field": dict[0], "errMsg" : "Lương lớn hơn 10"})
+            elif dict[1] > 100000:
+                errorList.append({"field": dict[0], "errMsg" : "Lương lớn hơn 10000"})
         else:
             if dict[1] <= 0:    
                 errorList.append({"field": dict[0], "errMsg" : "id Không được nhỏ hơn hoặc bằng 0"})
@@ -297,24 +292,20 @@ def post_update_salary(salaryList: schemas.ProjectSalaryUpdate ,db: Session = De
         result = errorList
     else:
         if np.array(data.ProjectEmployeeMethod.get_employee(db, schemas.ProjectEmployeeBase(employeeid=salaryList.employeeid, projectid=salaryList.projectid))).size != 0:
-            salaryCal = np.round(
-                (salaryList.employeeSalary) + 
-                (salaryList.projectSalary)
-                , 2)
-            updateData = data.ProjectEmployeeMethod.update_point(db, schemas.SubjectStudentPointCreate(
-                employeeId=salaryList.employeeid,
-                projectId=salaryList.projectid,
-                employeeSalary = salaryList.employeeSalary,
+            updateData = data.ProjectEmployeeMethod.update_employee(db, schemas.ProjectEmployeeCreate(
+                employeeid=salaryList.employeeid,
+                projectid=salaryList.projectid,
                 projectSalary = salaryList.projectSalary,
-                finnalSalary = np.round(((salaryList.employeeSalary + salaryList.projectSalary)),1)
+                bonusSalary = salaryList.bonusSalary,
                 ))
             result = {
-                "Họ và tên": data.EmployeeMethod.get_by_id(db, salaryList.employeeid)[0].name,
-                "Dự án" : data.ProjectMethod.ProjectMethod(db, salaryList.projectid)[0].name,
-                "Điểm": updateData.finnalSalary
+                "Họ và tên": data.EmployeeMethod.get_by_id(db, salaryList.employeeid)[0].Name,
+                "Dự án" : data.ProjectMethod.get_project_id(db, salaryList.projectid)[0].name,
+                "Lương dự án": updateData.projectSalary,
+                "Lương thưởng": updateData.projectSalary,
             }
         else:
-            if np.array(data.ProjectMethod.ProjectMethod(db, salaryList.projectid)).size == 0:
+            if np.array(data.ProjectMethod.get_project_id(db, salaryList.projectid)).size == 0:
                 result = {
                     "field": "projectid",
                     "errMsg" : "Không tồn tại dự án"
@@ -324,9 +315,7 @@ def post_update_salary(salaryList: schemas.ProjectSalaryUpdate ,db: Session = De
                     "field": "employeeid",
                     "errMsg" : "Không tồn tại nhân viên"
                 }
-
     return result
-
 # endregion
 
 # Region Linh
@@ -424,7 +413,7 @@ def avgFinalSalary(
 
 #region Lan
 #np
-@app.get('/project/TrangThaiDuAn',
+@app.get('/project/TrangThaiDuAn/{status}',
          tags=['Lan Numpy'],
          description=appDes.descriptionApi['LanNumpy']['TrangThaiDuAn']
          )
@@ -432,20 +421,31 @@ def get_status(
     status:Union[str,None]=None,
     db:Session = Depends(get_db)
 ):
+    result = ""
+    result1 = ""
     if (status !=None):
-        projectNotCompleted= data.ProjectAndEmployeeMethod.get_all_project(db,status)
-        if np.array(projectNotCompleted).size!=0:
-            df=pd.DataFrame.from_dict(projectNotCompleted)
-            print(df)
-            trangthai=df['Trạng thái dự án'][0]
-            name=df['Tên dự án'][0]
-            id=df['Mã dự án'][0]
-            if trangthai=="Chưa hoàn thành":
-                return f'Mã dự án {id}: {name} chưa hoàn thành'
+        projectStatus= data.ProjectAndEmployeeMethod.get_all_project(db,status=status)
+        if np.array(projectStatus).size!=0:
+            df=pd.DataFrame.from_dict(projectStatus)
+            for index in range (0,len(df)):
+                trangthai=df['Trạng thái dự án'][index]
+                name=df['Tên dự án'][index]
+                id=df['Mã dự án'][index]
+                if (trangthai=="Chưa hoàn thành"):
+                    result += f'Mã dự án {id}: {name} chưa hoàn thành' + ' ; '
+                else:
+                    result1 += f'Mã dự án {id}: {name} đã hoàn thành' + ' ; '
+            if(status == "Chưa hoàn thành"):
+                return result
+            elif(status == "Hoàn thành"):
+                return result1
             else:
-                return f'Mã dự án {id}: {name} đã hoàn thành'
+                raise HTTPException(status_code=404, detail="status không tồn tại")
         else:
             raise HTTPException(status_code=404, detail="chưa thể cập nhật(status:str)")
+    else:
+        raise HTTPException(status_code=404, detail="chưa nhập status")
+        
 @app.post('/project/SoLuongNguoiThamGia',
           tags=['Lan Numpy'],
           description=appDes.descriptionApi['LanNumpy']['SoLuongNguoiThamGia']

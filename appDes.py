@@ -52,7 +52,7 @@ descriptionApi = {
     },
     "NgocAnhNp" : {
         "LuongTongKetThangCuaNhanVien": "Nhập mã nhân viên để nhận lại tổng lương tháng của nhân viên(Tổng lương của tất cả các dự án đã tham gia)",
-        "CapNhatLuongTheoThang": "Nhập các thông tin: employeeid, projectid, lương cứng, lương tham gia dự án sau đó sẽ tự động cập nhật thông tin của nhân viên ở mã dự án đó trong cơ sở dữ liệu"
+        "CapNhatLuongTheoThang": "Nhập các thông tin: employeeid, projectid, lương tham gia dự án sau đó sẽ tự động cập nhật thông tin của nhân viên ở mã dự án đó trong cơ sở dữ liệu"    
     },
     'LinhNP' : {
         'BangXepHang' : 'Hiện bảng xếp hạng lương tháng của nhân viên và đánh giá năng lực tương ứng',
@@ -75,7 +75,7 @@ descriptionApi = {
         'SoLuongNguoiThamGia' : 'Nhập mã dự án để xem số lượng người tham gia dụ án là bao nhiêu'
     },
     'LanPandas':{
-        'ThongTinNVLuongCaoVaThapNhat' : 'Nhập mã dự án để xem thông tin nhân viên có đánh giá năng lực cao nhất và thấp nhất của dự án đó',
+        'ThongTinNVNanglucCaoVaThapNhat' : 'Nhập mã dự án để xem thông tin nhân viên có đánh giá năng lực cao nhất và thấp nhất của dự án đó',
         'TongSoDuAnHoanThanh' : 'Thống kê tổng dự án đã hoàn thành'
     }
 }

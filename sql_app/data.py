@@ -172,7 +172,8 @@ class ProjectAndEmployeeMethod:
     def get_all_project(db:Session, status:Union[str,None]):
         return db.query(models.Project.id.label('Mã dự án'),
                         models.Project.name.label('Tên dự án'),
-                        models.Project.status.label('Trạng thái dự án')).join(models.Employee).join(models.Project).filter(models.Project.status==status).all()
+                        models.Project.status.label('Trạng thái dự án')).all()
+    
     def get_all_project_all(db: Session):
         return db.query(models.Project.id.label('Mã dự án'),
                         models.Project.name.label('Tên dự án'),
@@ -219,12 +220,31 @@ class ProjectEmployeeMethod:
     def get_employee(db: Session, employeeProject: schemas.ProjectEmployeeBase):
         return db.query(models.Employee.name.label('Họ và tên'),
                         models.Project.name.label('Dự án'),
-                        models.Participate.finalSalary.label('Tổng lương')).join(models.Employee).join(models.Project).filter(
+                        models.Participate.bonus.label('Lương thưởng'),
+                        models.Participate.salaryProject.label('Lương dự án')).join(models.Employee).join(models.Project).filter(
             and_(
-                models.Participate.employeeId == employeeProject.studentid,
+                models.Participate.employeeId == employeeProject.employeeid,
                 models.Participate.projectId == employeeProject.projectid
             )
         ).all()
+
+    def update_employee(db: Session, salary: schemas.ProjectEmployeeCreate):
+        db_employee_update = db.query(models.Participate).filter(
+            and_(
+                models.Participate.employeeId == salary.employeeid,
+                models.Participate.projectId == salary.projectid,
+            )
+        ).update({
+            "projectSalary" : salary.projectSalary,
+            "bonusSalary": salary.bonusSalary,
+        })
+        db.commit()
+        return db.query(models.Participate).filter(
+            and_(
+                models.Participate.employeeId == salary.employeeid,
+                models.Participate.projectId == salary.projectid,
+            )
+        ).first()
 
 class FinalSalaryAndRate:
     def get_list(db: Session):
