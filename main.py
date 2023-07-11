@@ -135,6 +135,47 @@ def get_Project_Avg_Salary(
             "errMsg": "Thông tin không hợp lệ"
             })
 
+
+@app.post('/project/TongHaiDuAn', tags= ['Hoàng Anh Numpy'],
+          description=appDes.descriptionApi['HoangAnhNumpy']['TongHaiDuAn'])
+def Sum_2_project(
+    employee: schemas.sum2Project,
+    db: Session = Depends(get_db)
+):
+    if employee.employeeid != None or employee.project1 != None or employee.project2 != None :
+        if employee.employeeid > 0 :
+            if employee.project1 > 0 and employee.project2 >0:
+                projectSalary1= data.ParticipateMethod.get_employee_projectSalary(db, schemas.ParticipateBase(employeeId=employee.employeeid, projectId=employee.project1))
+                projectSalary2= data.ParticipateMethod.get_employee_projectSalary(db, schemas.ParticipateBase(employeeId=employee.employeeid, projectId=employee.project2))
+                df1 = pd.DataFrame.from_dict(projectSalary1)
+                df2 = pd.DataFrame.from_dict(projectSalary2)
+                luongDuAn1 = df1['Lương tháng'][0]
+                luongDuAn2 = df2['Lương tháng'][0]
+                duAn1 = df1['Dự án'][0]
+                duAn2 = df2['Dự án'][0]
+                name = df1['Họ tên'][0]
+                luong = np.array([luongDuAn1, luongDuAn2])
+                luongTrungBinh = np.round(np.sum(luong) ,1)
+            else:
+                raise HTTPException(status_code=404, detail={
+                "field": "duAn1, duAn2",
+                "errMsg": "Thông tin không hợp lệ"
+                })
+        else: 
+            raise HTTPException(status_code=404, detail={
+            "field": "employeeid",
+            "errMsg": "Thông tin không hợp lệ"
+            })
+    else:
+        raise HTTPException(status_code=404, detail={
+            "field": "employeeid, duAn1, duAn2",
+            "errMsg": "Chưa có thông tin"
+        })
+    return f'Tổng lương {duAn1} và {duAn2} của nhân viên {name} là {luongTrungBinh}'
+
+
+
+
 # endregion
 #region Ngoc Anh
 #pd

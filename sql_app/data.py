@@ -101,6 +101,15 @@ class ParticipateMethod:
             )
         ).all()
     
+    def get_employee_projectSalary(db: Session, participate: schemas.ParticipateBase):
+        return db.query(models.Employee.name.label('Họ tên'),
+                        models.Project.name.label('Dự án'),
+                        models.Participate.finalSalary.label('Lương tháng')).join(models.Employee).join(models.Project).filter(
+            and_(
+                models.Participate.employeeId == participate.employeeId,
+                models.Participate.projectId == participate.projectId
+            )
+        ).all()
     
 
 class DepartmentMethod:

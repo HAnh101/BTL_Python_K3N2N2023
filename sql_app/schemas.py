@@ -110,3 +110,8 @@ class ProjectEmployeeBase(BaseModel):
 class ProjectSalaryUpdate(ProjectEmployeeBase):
     employeeSalary: int
     projectSalary: int
+
+class sum2Project(BaseModel):
+    employeeid: int
+    project1: int
+    project2: int
