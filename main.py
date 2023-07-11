@@ -229,7 +229,7 @@ def post_find_employee(employeeInfor: schemas.EmployeeFind, db: Session = Depend
                 errorList.append({"field": dict[0], "errMsg" : "Lương lớn hơn 10000"})
         else:
             if line==0:
-                if dict[1] < 0:    
+                if dict[1] <= 0:    
                     errorList.append({"field": dict[0], "errMsg" : "id Không được nhỏ hơn hoặc bằng 0"})
         line +=1
     if len(errorList) > 0:
