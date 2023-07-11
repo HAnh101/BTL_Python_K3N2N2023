@@ -232,3 +232,36 @@ class FinalSalaryAndRate:
         ).filter(models.Employee.id == models.Participate.employeeId).group_by(models.Employee.id).order_by((models.Participate.finalSalary).desc()).all()
     
 
+class RateMethod:
+    def create_Rate(db: Session, employee: schemas.EmployeeRate):
+        db_rEmployee = models.Employee( rate = employee.rate)
+        db.add(db_rEmployee)
+        db.commit()
+        db.refresh(db_rEmployee)
+        return db_rEmployee
+
+    def get_rate(db:Session, id: Union[int, None] = None, rate: Union[int, None] = None):
+        return db.query(models.Employee).filter(
+            or_(
+                models.Employee.id== id,
+                models.Employee.rate == rate,
+            )
+        ).all()
+
+    def update_Rate(db: Session, employee: schemas.EmployeeRate):
+        db_rate_update = db.query(models.Employee).filter(
+            and_(
+                models.Employee.id == employee.id
+            )
+        ).update({
+            'rate': employee.rate,
+        })
+        db.commit()
+        return db.query(models.Employee).filter(
+            and_(
+                models.Employee.id == employee.id
+            )
+        ).first()
+   
+    def get_all(db:Session):
+        return db.query(models.Employee).all()
