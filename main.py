@@ -144,7 +144,9 @@ def Sum_2_project(
 ):
     if employee.employeeid != None or employee.project1 != None or employee.project2 != None :
         if employee.employeeid > 0 :
-            if employee.project1 > 0 and employee.project2 >0:
+            lenProject1 = len(np.array(data.ParticipateMethod.get_employee_projectSalary(db, schemas.ParticipateBase(employeeId=employee.employeeid, projectId=employee.project1))))
+            lenProject2 = len(np.array(data.ParticipateMethod.get_employee_projectSalary(db, schemas.ParticipateBase(employeeId=employee.employeeid, projectId=employee.project2))))
+            if (lenProject1 != 0) and (lenProject2 != 0) :
                 projectSalary1= data.ParticipateMethod.get_employee_projectSalary(db, schemas.ParticipateBase(employeeId=employee.employeeid, projectId=employee.project1))
                 projectSalary2= data.ParticipateMethod.get_employee_projectSalary(db, schemas.ParticipateBase(employeeId=employee.employeeid, projectId=employee.project2))
                 df1 = pd.DataFrame.from_dict(projectSalary1)
@@ -402,15 +404,14 @@ def get_top10(db: Session = Depends(get_db)):
          tags = ['Linh Pandas'],
          description=appDes.descriptionApi['LinhPD']['LuongTrungBinhPhongBan'])
 def avgFinalSalary(
-    department: schemas.avgSalaryDepartment,
+    departmentid: Union[int, None] = None,
     db: Session = Depends(get_db)
 ):
-    if(department.id != None):
-        avgSalary = data.DepartmentMethod.get_avgFinalSalary_department(db, schemas.avgSalaryDepartment(id=department.id))
+    if(departmentid != None):
+        avgSalary =data.DepartmentMethod.get_avgFinalSalary_department(db, departmentid)
         df= pd.DataFrame.from_dict(avgSalary)
         nameD = df['Phòng ban'][0]
-        LuongTB = df['Lương tháng trung bình'][0]
-        
+        LuongTB = df['Lương tháng trung bình'][0]      
     else:
         result = {
             "field": "departmentId",
@@ -484,7 +485,7 @@ def Send_id_getProject(
             description=appDes.descriptionApi['LanPandas']['ThongTinNVNanglucCaoVaThapNhat'])
 
 def post_rate(projectAndRate: schemas.DepartmentAndProject, db: Session = Depends(get_db)):
-    resProject = data.ProjectAndEmployeeAndSalaryMethod.get_all_salary(db,projectAndRate)
+    resProject = data.ProjectAndEmployeeAndRateMethod.get_all_rate(db,projectAndRate)
     df = pd.DataFrame.from_dict(resProject)
     if (projectAndRate.projectid <0 or  projectAndRate.projectid == None ):
         return "Mã dự án không tồn tại"   

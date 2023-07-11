@@ -142,21 +142,19 @@ class DepartmentMethod:
                 models.Department.id == department.departmentId
             )
         ).first()
+    
+    def get_avgFinalSalary_department(db: Session, departmentid: int):
+        return db.query(models.Department.name.label('Phòng ban'),
+                        func.avg(models.Participate.finalSalary).label('Lương tháng trung bình')
+                        ).filter(
+                            and_(models.Department.id == departmentid)
+                        ).group_by(models.Department.id).all()
 
     def get_all(db:Session):
         return db.query(models.Project).all()
     
-    def get_avgFinalSalary_department(db: Session, department: schemas.avgSalaryDepartment):
-        return db.query(models.Department.name.label('Phòng ban'),
-                        func.avg(models.Participate.finalSalary).label('Lương tháng trung bình')
-                        ).filter(
-                            and_(models.Department.id == department.id)
-                        ).group_by(models.Department.id).all()
-    
-
-
-    def get_all(db:Session):
-        return db.query(models.Department).all()
+    # def get_all(db:Session):
+    #     return db.query(models.Department).all()
 
 class ProjectAndEmployeeMethod:
     def get_all_employee(db: Session, employeeid: Union[int, None]):
