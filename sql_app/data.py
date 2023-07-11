@@ -144,7 +144,7 @@ class DepartmentMethod:
         ).first()
 
     def get_all(db:Session):
-        return db.query(models.Department).all()
+        return db.query(models.Project).all()
     
     def get_avgFinalSalary_department(db: Session, department: schemas.avgSalaryDepartment):
         return db.query(models.Department.name.label('Phòng ban'),
@@ -171,13 +171,18 @@ class ProjectAndEmployeeMethod:
 
     def get_all_project(db:Session, status:Union[str,None]):
         return db.query(models.Project.id.label('Mã dự án'),
-                        models.Project.name.label('Tên dự án'),
+                        models.Project.name.label('Dự án'),
                         models.Project.status.label('Trạng thái dự án')).all()
     
+    # def get_all_project_all(db: Session):
+    #     return db.query(models.Project.id.label('Mã dự án'),
+    #                     models.Project.name.label('Tên dự án'),
+    #                     models.Project.status.label('Trạng thái dự án')).join(models.Employee).join(models.Project).all()
+
     def get_all_project_all(db: Session):
         return db.query(models.Project.id.label('Mã dự án'),
-                        models.Project.name.label('Tên dự án'),
-                        models.Project.status.label('Trạng thái dự án')).join(models.Employee).join(models.Project).all()
+                        models.Project.name.label('Dự án'),
+                        models.Project.status.label('Trạng thái dự án')).all()
 
 class BonusProjectMethod:
     def get_all_bonus(db: Session, projectid: Union[int, None]):
@@ -298,7 +303,7 @@ class RateMethod:
 
 class getEmployeeInProject:
     def getEmp(projectID:int, db:Session):
-        return db.query(models.Employee).join(models.Project).filter(models.Department.id==projectID).all()
+        return db.query(models.Employee).join(models.Project).filter(models.Project.id==projectID).all()
     
 class ProjectAndEmployeeAndRateMethod:
     def get_all_rate(db:Session, departmentProject:schemas.DepartmentAndProject):

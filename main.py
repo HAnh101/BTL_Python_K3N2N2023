@@ -438,7 +438,7 @@ def get_status(
             df=pd.DataFrame.from_dict(projectStatus)
             for index in range (0,len(df)):
                 trangthai=df['Trạng thái dự án'][index]
-                name=df['Tên dự án'][index]
+                name=df['Dự án'][index]
                 id=df['Mã dự án'][index]
                 if (trangthai=="Chưa hoàn thành"):
                     result += f'Mã dự án {id}: {name} chưa hoàn thành' + ' ; '
@@ -460,23 +460,23 @@ def get_status(
           description=appDes.descriptionApi['LanNumpy']['SoLuongNguoiThamGia']
           )
 def Send_id_getProject(
-    projectId:schemas.ProjectID,
+    projectID:schemas.ProjectID,
     db:Session=Depends(get_db)
 ):
-    if(projectId.projectID != None and projectId.projectID > 0):
-        projectsize=data.getEmployeeInProject.getEmp(projectID=projectId.projectID,db=db)
+    if(projectID.projectID != None and projectID.projectID > 0):
+        projectsize=data.getEmployeeInProject.getEmp(projectID=projectID.projectID,db=db)
         fullProject= data.DepartmentMethod.get_all(db=db)
         # số nhân viên tham gia dự án
         num_Emp_inProject=len(np.array(projectsize))
         #tổng số dự án
         allProject=len(np.array(fullProject))
 
-        if (projectId.projectID > allProject):
-            return f"Dự án {projectId.projectID} không tồn tại!"
+        if (projectID.projectID > allProject):
+            return f"Dự án {projectID.projectID} không tồn tại!"
         else:
-            return f"Số nhân viên tham gia dự án {projectId.projectID} là {num_Emp_inProject} nhân viên"
+            return f"Số nhân viên tham gia dự án {projectID.projectID} là {num_Emp_inProject} nhân viên"
     else:
-        raise HTTPException(status_code= 404, detail= f"Mã dự án {projectId.projectID} không tồn tại!")
+        raise HTTPException(status_code= 404, detail= f"Mã dự án {projectID.projectID} không tồn tại!")
 
 #pd
 @app.post('/statistic/project/rate/{projectid}',
@@ -513,12 +513,17 @@ def post_rate(projectAndRate: schemas.DepartmentAndProject, db: Session = Depend
 def get_number_of_projectCompleted(db: Session = Depends(get_db)):
     all_Project = data.ProjectAndEmployeeMethod.get_all_project_all(db)
     df = pd.DataFrame.from_dict(all_Project)
-    df['Hoàn thành'] = np.where(df['Trạng thái dự án'] )
-    df_project = df[['Dự án', 'Hoàn thành']]
+    df['Trạng thái'] = df['Trạng thái dự án']
+    df_project = df[['Dự án','Trạng thái']]
     
-    # Số học sinh trượt môn học theo từng môn
-    df_complete = df_project[df_project['Hoàn thành'] == 'Hoàn thành'].groupby(['Dự án']).size()
+    df_complete = df_project[df_project['Trạng thái']=='Hoàn thành'].groupby(['Trạng thái']).size().reset_index(name='Tổng số Dự án hoàn thành')
     
+    # table = pd.DataFrame.from_dict(df_complete).to_html()
+    # text_file = open("employee_list.html", "w", encoding='utf8')
+    # text_file.write(table)
+    # text_file.close()
+    # webbrowser.open(os.getcwd() + '/employee_list.html')
+
     html_chart = df_complete.to_html()
     return HTMLResponse(content=html_chart, status_code=200)
 
