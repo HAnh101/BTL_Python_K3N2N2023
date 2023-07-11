@@ -169,6 +169,15 @@ class ProjectAndEmployeeMethod:
                         models.Project.name.label('Dự án'),
                         models.Participate.finalSalary.label('Tổng lương tháng')).join(models.Employee).join(models.Project).filter(models.Project.id == projectid).all()
 
+    def get_all_project(db:Session, status:Union[str,None]):
+        return db.query(models.Project.id.label('Mã dự án'),
+                        models.Project.name.label('Tên dự án'),
+                        models.Project.status.label('Trạng thái dự án')).join(models.Employee).join(models.Project).filter(models.Project.status==status).all()
+    def get_all_project_all(db: Session):
+        return db.query(models.Project.id.label('Mã dự án'),
+                        models.Project.name.label('Tên dự án'),
+                        models.Project.status.label('Trạng thái dự án')).join(models.Employee).join(models.Project).all()
+
 class BonusProjectMethod:
     def get_all_bonus(db: Session, projectid: Union[int, None]):
         return db.query(models.Employee.id.label('Mã nhân viên'),
@@ -265,3 +274,21 @@ class RateMethod:
    
     def get_all(db:Session):
         return db.query(models.Employee).all()
+
+class getEmployeeInProject:
+    def getEmp(projectID:int, db:Session):
+        return db.query(models.Employee).join(models.Project).filter(models.Department.id==projectID).all()
+    
+class ProjectAndEmployeeAndRateMethod:
+    def get_all_rate(db:Session, departmentProject:schemas.DepartmentAndProject):
+        return db.query(
+            models.Employee.name.label('Họ và Tên'),
+            models.Project.name.label('Dự án'),
+             models.Department.name.label("Phòng ban"),
+             models.Employee.rate.label("Đánh giá")
+             ).select_from(models.Employee).join(models.Department).join(models.Participate).join(
+            models.Project).filter(and_(
+                                        models.Employee.salary==departmentProject.salary,
+                                        models.Participate.projectId==departmentProject.projectid)).all()
+    
+

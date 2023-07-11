@@ -115,3 +115,6 @@ class sum2Project(BaseModel):
     employeeid: int
     project1: int
     project2: int
+
+class ProjectID(BaseModel):
+    projectID: int

@@ -421,3 +421,96 @@ def avgFinalSalary(
     return f'Lương tháng trung bình của {nameD} là {LuongTB}'
 
 # endRegion
+
+#region Lan
+#np
+@app.get('/project/TrangThaiDuAn',
+         tags=['Lan Numpy'],
+         description=appDes.descriptionApi['LanNumpy']['TrangThaiDuAn']
+         )
+def get_status(
+    status:Union[str,None]=None,
+    db:Session = Depends(get_db)
+):
+    if (status !=None):
+        projectNotCompleted= data.ProjectAndEmployeeMethod.get_all_project(db,status)
+        if np.array(projectNotCompleted).size!=0:
+            df=pd.DataFrame.from_dict(projectNotCompleted)
+            print(df)
+            trangthai=df['Trạng thái dự án'][0]
+            name=df['Tên dự án'][0]
+            id=df['Mã dự án'][0]
+            if trangthai=="Chưa hoàn thành":
+                return f'Mã dự án {id}: {name} chưa hoàn thành'
+            else:
+                return f'Mã dự án {id}: {name} đã hoàn thành'
+        else:
+            raise HTTPException(status_code=404, detail="chưa thể cập nhật(status:str)")
+@app.post('/project/SoLuongNguoiThamGia',
+          tags=['Lan Numpy'],
+          description=appDes.descriptionApi['LanNumpy']['SoLuongNguoiThamGia']
+          )
+def Send_id_getProject(
+    projectId:schemas.ProjectID,
+    db:Session=Depends(get_db)
+):
+    if(projectId.projectID != None and projectId.projectID > 0):
+        projectsize=data.getEmployeeInProject.getEmp(projectID=projectId.projectID,db=db)
+        fullProject= data.DepartmentMethod.get_all(db=db)
+        # số nhân viên tham gia dự án
+        num_Emp_inProject=len(np.array(projectsize))
+        #tổng số dự án
+        allProject=len(np.array(fullProject))
+
+        if (projectId.projectID > allProject):
+            return f"Dự án {projectId.projectID} không tồn tại!"
+        else:
+            return f"Số nhân viên tham gia dự án {projectId.projectID} là {num_Emp_inProject} nhân viên"
+    else:
+        raise HTTPException(status_code= 404, detail= f"Mã dự án {projectId.projectID} không tồn tại!")
+
+#pd
+@app.post('/statistic/project/rate/{projectid}',
+            tags=['Lan Pandas'],
+            description=appDes.descriptionApi['LanPandas']['ThongTinNVNanglucCaoVaThapNhat'])
+
+def post_rate(projectAndRate: schemas.DepartmentAndProject, db: Session = Depends(get_db)):
+    resProject = data.ProjectAndEmployeeAndSalaryMethod.get_all_salary(db,projectAndRate)
+    df = pd.DataFrame.from_dict(resProject)
+    if (projectAndRate.projectid <0 or  projectAndRate.projectid == None ):
+        return "Mã dự án không tồn tại"   
+    else:
+        max_Rate = df['Đánh giá'].idxmax()
+        min_Rate = df['Đánh giá'].idxmin()
+
+        # Lấy thông tin nhân viên max, min
+        inforEmp_max = df.iloc[[max_Rate]]
+        inforEmp_min = df.iloc[[min_Rate]]
+        return {
+            "Highest": {
+                "msg": f"Nhân viên lương cao nhất mã dự án {projectAndRate.projectid}",
+                "data": inforEmp_max.T
+            },
+            "Lowest": {
+                "msg": f"Nhân viên lương thấy nhất mã dự án {projectAndRate.projectid}",
+                "data": inforEmp_min.T
+            }
+        }
+
+@app.get('/project/TongSoDuAnHoanThanh',
+            tags=['Lan Pandas'],
+            description=appDes.descriptionApi['LanPandas']['TongSoDuAnHoanThanh']
+        )
+def get_number_of_projectCompleted(db: Session = Depends(get_db)):
+    all_Project = data.ProjectAndEmployeeMethod.get_all_project_all(db)
+    df = pd.DataFrame.from_dict(all_Project)
+    df['Hoàn thành'] = np.where(df['Trạng thái dự án'] )
+    df_project = df[['Dự án', 'Hoàn thành']]
+    
+    # Số học sinh trượt môn học theo từng môn
+    df_complete = df_project[df_project['Hoàn thành'] == 'Hoàn thành'].groupby(['Dự án']).size()
+    
+    html_chart = df_complete.to_html()
+    return HTMLResponse(content=html_chart, status_code=200)
+
+# endregion
