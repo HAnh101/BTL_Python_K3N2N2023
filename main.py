@@ -211,7 +211,10 @@ def get_bonus_project(
                 "field" : "projectid",
                 "errMsg" : "Giá trị projectid không thể nhỏ hơn hoặc bằng 0"
             })
-@app.post('/department/TimKiemNhanVien', tags=['Ngọc Anh Pandas'], description=appDes.descriptionApi['NgocAnhPd']['TimKiemNhanVien'])
+
+@app.post('/department/TimKiemNhanVien', 
+          tags=['Ngọc Anh Pandas'], 
+          description=appDes.descriptionApi['NgocAnhPd']['TimKiemNhanVien'])
 def post_find_employee(employeeInfor: schemas.EmployeeFind, db: Session = Depends(get_db)):
     result = ""
     errorList = []
@@ -243,7 +246,10 @@ def post_find_employee(employeeInfor: schemas.EmployeeFind, db: Session = Depend
                 "msg": "không có kết quả phù hợp"
             }
     return result
-@app.get('/project/LuongTongKetThangCuaNhanVien', tags=['Ngọc Anh Numpy'], description = appDes.descriptionApi['NgocAnhNp']['LuongTongKetThangCuaNhanVien'])
+
+@app.get('/project/LuongTongKetThangCuaNhanVien', 
+         tags=['Ngọc Anh Numpy'], 
+         description = appDes.descriptionApi['NgocAnhNp']['LuongTongKetThangCuaNhanVien'])
 def get_salary_project_sum_employee(
     employeeid: Union[int, None] = None,
     db: Session = Depends(get_db)
@@ -273,7 +279,10 @@ def get_salary_project_sum_employee(
             "field": "employeeid",
             "errMsg": "Chưa có thông tin"
         })
-@app.post('/project/CapNhatLuongTheoThang', tags=['Ngọc Anh Numpy'], description = appDes.descriptionApi['NgocAnhNp']['CapNhatLuongTheoThang'])
+
+@app.post('/project/CapNhatLuongTheoThang', 
+          tags=['Ngọc Anh Numpy'], 
+          description = appDes.descriptionApi['NgocAnhNp']['CapNhatLuongTheoThang'])
 def post_update_salary(salaryList: schemas.ProjectSalaryUpdate ,db: Session = Depends(get_db)):
     result = ""
     errorList = []
@@ -301,8 +310,8 @@ def post_update_salary(salaryList: schemas.ProjectSalaryUpdate ,db: Session = De
             result = {
                 "Họ và tên": data.EmployeeMethod.get_by_id(db, salaryList.employeeid)[0].Name,
                 "Dự án" : data.ProjectMethod.get_project_id(db, salaryList.projectid)[0].name,
-                "Lương dự án": updateData.projectSalary,
-                "Lương thưởng": updateData.projectSalary,
+                "Lương dự án": updateData.salaryProject,
+                "Lương thưởng" : updateData.bonus,
             }
         else:
             if np.array(data.ProjectMethod.get_project_id(db, salaryList.projectid)).size == 0:
@@ -310,7 +319,7 @@ def post_update_salary(salaryList: schemas.ProjectSalaryUpdate ,db: Session = De
                     "field": "projectid",
                     "errMsg" : "Không tồn tại dự án"
                 }
-            elif np.array(data.EmployeeMethod.get_by_id(db, employeeid = salaryList.employeeid)).size == 0:
+            elif np.array(data.EmployeeMethod.get_by_id(db, employeeId = salaryList.employeeid)).size == 0:
                 result = {
                     "field": "employeeid",
                     "errMsg" : "Không tồn tại nhân viên"

@@ -221,7 +221,8 @@ class ProjectEmployeeMethod:
         return db.query(models.Employee.name.label('Họ và tên'),
                         models.Project.name.label('Dự án'),
                         models.Participate.bonus.label('Lương thưởng'),
-                        models.Participate.salaryProject.label('Lương dự án')).join(models.Employee).join(models.Project).filter(
+                        models.Participate.salaryProject.label('Lương dự án'),
+                        models.Participate.finalSalary.label('Tổng lương tháng')).join(models.Employee).join(models.Project).filter(
             and_(
                 models.Participate.employeeId == employeeProject.employeeid,
                 models.Participate.projectId == employeeProject.projectid
@@ -235,8 +236,8 @@ class ProjectEmployeeMethod:
                 models.Participate.projectId == salary.projectid,
             )
         ).update({
-            "projectSalary" : salary.projectSalary,
-            "bonusSalary": salary.bonusSalary,
+            "salaryProject" : salary.projectSalary,
+            "bonus" : salary.bonusSalary,
         })
         db.commit()
         return db.query(models.Participate).filter(
