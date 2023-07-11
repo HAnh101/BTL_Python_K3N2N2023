@@ -367,14 +367,21 @@ def updateRate(
 ):
     result = " "
     if(employee.id > 0):
-        updateRate = data.RateMethod.update_Rate(db,schemas.EmployeeRate(
-            id = employee.id,
-            rate = employee.rate
-        ))
-        result = data.RateMethod.get_rate(db, employee.id)
+        if employee.rate > 0:
+            updateRate = data.RateMethod.update_Rate(db,schemas.EmployeeRate(
+                id = employee.id,
+                rate = employee.rate
+            ))
+            result = data.RateMethod.get_rate(db, employee.id)
+        else:
+            result = {
+                "field": "rate",
+                "errMsg": "Thông tin không hợp lệ"
+            }
+
     else:
         result = {
-            "field": "classid",
+            "field": "id",
             "errMsg": "Thông tin không hợp lệ"
         }
     return result
