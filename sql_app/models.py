@@ -5,7 +5,7 @@ from database import Base
 class Employee(Base):
     __tablename__ = "employee"
     id = Column(Integer, primary_key=True, autoincrement=True, index=True, nullable=False)
-    name = Column(String(20), nullable=False)
+    name = Column(String(50), nullable=False)
     departmentId = Column(Integer, ForeignKey("department.id"), nullable=False)
     salary = Column(Integer, index=True, nullable=False)
     rate = Column(Integer, index=True, nullable=False)

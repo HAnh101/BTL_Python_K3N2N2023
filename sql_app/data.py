@@ -194,22 +194,19 @@ class EmployeeInformationMethod:
                 models.Employee.name.label('Họ và tên'),
                 models.Department.name.label('Phòng ban'),
                 models.Project.name.label('Dự án'),                
+                models.Participate.position.label('Chức vụ'),
                 models.Participate.finalSalary.label('Tổng lương tháng'),
                 models.Employee.rate.label('Đánh giá'),
                 models.Participate.bonus.label('Lương thưởng'),
-                models.Participate.position.label('Chức vụ'),
                 models.Participate.salaryProject.label('Lương trong dự án'),
-                ).select_from(models.Employee).join(models.Department).join(models.Participate).join(models.Project).filter(
+                ).select_from(models.Employee).join(models.Participate).join(models.Project).filter(
                     or_(
                         models.Employee.id == employeeInfor.employeeid,
                         models.Employee.name == employeeInfor.employeeName,
-                        models.Department.name == employeeInfor.departmentName,
-                        models.Project.name == employeeInfor.projectName,
-                        models.Participate.finalSalary == employeeInfor.employeeFinalSalary,
                         models.Employee.rate == employeeInfor.employeeRate,
                         models.Participate.bonus == employeeInfor.employeeBonus,
-                        models.Participate.position == employeeInfor.employeePosition,
                         models.Participate.salaryProject == employeeInfor.employeeSalaryProject,
+                        models.Participate.finalSalary == employeeInfor.employeeFinalSalary,
                     )
                 ).all()
 
@@ -301,8 +298,8 @@ class RateMethod:
 
 class getEmployeeInProject:
     def getEmp(projectID:int, db:Session):
-        return db.query(models.Employee).join(models.Participate).join(models.Project).filter(models.Participate.projectId==projectID).all()
-    
+        return db.query(models.Participate.employeeId.label('Tham gia')).join(models.Project).filter(models.Participate.projectId==projectID).all()
+
 class ProjectAndEmployeeAndRateMethod:
     def get_all_rate(db:Session, projectId:schemas.EmployeeAndProject):
         return db.query(

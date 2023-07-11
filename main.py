@@ -222,13 +222,13 @@ def post_find_employee(employeeInfor: schemas.EmployeeFind, db: Session = Depend
     errorList = []
     line = 0
     for dict in employeeInfor:
-        if(line >= 2):
+        if(line >= 3):
             if dict[1] < 0:
-                d[col[0]] = row[idx]
+                errorList.append({"field": dict[0], "errMsg" : "Lương nhỏ hơn 0"})
             elif dict[1] > 10000:
                 errorList.append({"field": dict[0], "errMsg" : "Lương lớn hơn 10000"})
         else:
-            if line!=1:
+            if line==0:
                 if dict[1] < 0:    
                     errorList.append({"field": dict[0], "errMsg" : "id Không được nhỏ hơn hoặc bằng 0"})
         line +=1
@@ -466,9 +466,11 @@ def Send_id_getProject(
 ):
     if(projectID.projectID != None and projectID.projectID > 0):
         projectsize=data.getEmployeeInProject.getEmp(projectID=projectID.projectID,db=db)
-        fullProject= data.DepartmentMethod.get_all(db=db)
+        fullProject= data.ProjectMethod.get_all(db=db)
         # số nhân viên tham gia dự án
-        num_Emp_inProject=len(np.array(projectsize))
+        df=pd.DataFrame.from_dict(projectsize)
+        result=np.array(df['Tham gia'])
+        num_Emp_inProject=len(result)
         #tổng số dự án
         allProject=len(np.array(fullProject))
 
@@ -478,6 +480,7 @@ def Send_id_getProject(
             return f"Số nhân viên tham gia dự án {projectID.projectID} là {num_Emp_inProject} nhân viên"
     else:
         raise HTTPException(status_code= 404, detail= f"Mã dự án {projectID.projectID} không tồn tại!")
+
 
 #pd
 @app.post('/statistic/project/rate',
