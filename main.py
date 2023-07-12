@@ -367,7 +367,7 @@ def updateRate(
 ):
     result = " "
     if(employee.id > 0):
-        if employee.rate > 0:
+        if employee.rate > 0 | employee.rate < 5:
             updateRate = data.RateMethod.update_Rate(db,schemas.EmployeeRate(
                 id = employee.id,
                 rate = employee.rate
