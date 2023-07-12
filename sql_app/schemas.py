@@ -93,7 +93,7 @@ class avgSalaryDepartment(BaseModel):
 class EmployeeFind(BaseModel):
     employeeid: Union[int, None] = None
     employeeName: Union[str, None] = None
-    employeeRate: Union[str, None] = None
+    employeeRate: Union[int, None] = None
     employeeBonus: Union[int, None] = None
     employeeSalaryProject: Union[int, None] = None
     employeeFinalSalary: Union[int, None] = None
