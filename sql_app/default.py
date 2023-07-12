@@ -36,7 +36,8 @@ def initDef():
         if(len(employeeInDepartment.fetchall()) < employeeEachDepartment):
             return departmentId
         else:
-            departmentIdNew = int(np.ceil((department *employeeEachDepartment) * np.random.random()))
+            departmentIdNew = np.random.randint(0,high=len(listDepartment)+1)
+            # departmentIdNew = int(np.ceil((department *employeeEachDepartment) * np.random.random()))
             employeeEachDepartmentNew = employeeEachDepartment
             departmentNew = department
             return departmentIsReady(departmentIdNew, employeeEachDepartmentNew, departmentNew)
@@ -51,7 +52,8 @@ def initDef():
         c.execute('''INSERT INTO "employee"("name", "departmentId", "salary", "rate") VALUES (?, ?, ?, ?)''', [f'{firstName} {middleName} {lastName[0]}', departmentId, salary, rate])
 
     for eachEmployee in range (0, employeeSum):
-        departmentId = int(np.ceil(department *(employeeEachDepartment) * np.random.random()))
+        departmentId = np.random.randint(0,high=len(listDepartment)+1)
+        # departmentId = int(np.ceil(department *(employeeEachDepartment) * np.random.random()))
         setEmployeeToDepartment(departmentIsReady(departmentId, employeeEachDepartment, department))
 
     listProject = [

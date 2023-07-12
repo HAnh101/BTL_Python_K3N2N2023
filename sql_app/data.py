@@ -4,6 +4,7 @@ from sqlalchemy import func
 from typing import Union
 import sql_app.models as models
 import sql_app.schemas as schemas
+from sqlalchemy.sql import text
 
 class EmployeeMethod:
     def create_employee(db: Session, employee: schemas.EmployeeBase):
@@ -142,13 +143,16 @@ class DepartmentMethod:
                 models.Department.id == department.departmentId
             )
         ).first()
-    
+
     def get_avgFinalSalary_department(db: Session, departmentid: int):
-        return db.query(models.Department.name.label('Phòng ban'),
+        return db.query(models.Employee.departmentId,
                         func.avg(models.Participate.finalSalary).label('Lương tháng trung bình')
-                        ).filter(
-                            and_(models.Department.id == departmentid)
-                        ).group_by(models.Department.id).all()
+                        ).select_from(models.Employee).join(models.Participate).filter(
+                            and_(models.Employee.id == models.Participate.employeeId)
+                        ).group_by(models.Employee.departmentId).having(models.Employee.departmentId == departmentid).all()
+    
+    def get_name_department(db: Session, departmentid:int):
+        return db.query(models.Department.name.label('Phòng ban')).filter(models.Department.id == departmentid).all()
 
     def get_all(db:Session):
         return db.query(models.Project).all()
@@ -168,11 +172,6 @@ class ProjectAndEmployeeMethod:
         return db.query(models.Project.id.label('Mã dự án'),
                         models.Project.name.label('Dự án'),
                         models.Project.status.label('Trạng thái dự án')).all()
-    
-    # def get_all_project_all(db: Session):
-    #     return db.query(models.Project.id.label('Mã dự án'),
-    #                     models.Project.name.label('Tên dự án'),
-    #                     models.Project.status.label('Trạng thái dự án')).join(models.Employee).join(models.Project).all()
 
     def get_all_project_all(db: Session):
         return db.query(models.Project.id.label('Mã dự án'),

@@ -410,7 +410,9 @@ def avgFinalSalary(
     if(departmentid != None):
         avgSalary =data.DepartmentMethod.get_avgFinalSalary_department(db, departmentid)
         df= pd.DataFrame.from_dict(avgSalary)
-        nameD = df['Phòng ban'][0]
+        nameDepartment = data.DepartmentMethod.get_name_department(db, departmentid)
+        df1 = pd.DataFrame.from_dict(nameDepartment)
+        nameD = df1['Phòng ban'][0]
         LuongTB = df['Lương tháng trung bình'][0]
     else:
         result = {
