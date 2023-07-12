@@ -47,13 +47,11 @@ def initDef():
         firstName = firstNameList[int(np.floor(len(firstNameList) * np.random.random()))]
         middleName =  middleNameList[int(np.floor(len(middleNameList) * np.random.random()))]
         lastName = random.choices(string.ascii_uppercase, k=1)
-        # c.execute('''INSERT INTO "employee"("salary") VALUES (?)''', salary)
         rate = np.random.randint(1, high=5)
-        # c.execute('''INSERT INTO "employee"("rate") VALUES (?)''', rate)
         c.execute('''INSERT INTO "employee"("name", "departmentId", "salary", "rate") VALUES (?, ?, ?, ?)''', [f'{firstName} {middleName} {lastName[0]}', departmentId, salary, rate])
 
     for eachEmployee in range (0, employeeSum):
-        departmentId = int(np.ceil(department *(employeeEachDepartment) / np.random.random()))
+        departmentId = int(np.ceil(department *(employeeEachDepartment) * np.random.random()))
         setEmployeeToDepartment(departmentIsReady(departmentId, employeeEachDepartment, department))
 
     listProject = [
@@ -70,23 +68,6 @@ def initDef():
     ]
     statusList = ["Hoàn thành", "Chưa hoàn thành"]
     
-    # def setProject():
-    #     name = listProject[int(np.floor(len(listProject) * np.random.random()))]
-    #     status = statusList[int(np.floor(len(statusList) * np.random.random()))]
-    #     c.execute('''INSERT INTO "project"("name", "status") VALUES (?, ?)''', [f'{name}', status])
-    
-
-    # def ProjectIsReady(projectId, ProjectEachEmployee, project):
-    #     employeeInDepartment = c.execute('''SELECT * FROM "employee" WHERE departmentId == ?''', [departmentId])
-    
-    #     if(len(employeeInDepartment.fetchall()) < employeeEachDepartment):
-    #         return departmentId
-    #     else:
-    #         departmentIdNew = int(np.ceil((department *employeeEachDepartment) * np.random.random()))
-    #         employeeEachDepartmentNew = employeeEachDepartment
-    #         departmentNew = department
-    #         return departmentIsReady(departmentIdNew, employeeEachDepartmentNew, departmentNew)
-    
     def setProject(index):
         name = listProject[index]
         status = statusList[int(np.floor(len(statusList) * np.random.random()))]
@@ -95,26 +76,8 @@ def initDef():
     
     for eachProject in range(0, len(listProject)):
         setProject(eachProject)
-    # if(name > len(listProject)):
-    #     name = listProject[int(np.floor(len(listProject) * np.random.random()))]
-
-    # setProject()
 
     positionList = ["Trưởng nhóm", "Thành viên"]
-
-    # for employee in range(0, employeeSum):
-    #     projectLen = c.execute('''SELECT * FROM "project" ''')
-
-    #     projectEachEmployee = random.choice(projectLen)
-    #     for project in range(0, len(projectLen.fetchall())):
-    #         position = random.choice(positionList)
-    #         salaryProject = 2000
-    #         bonus = np.random.randint(100, high=500)
-    #         # bonus = random.choice(bonusList)
-    #         finalSalary = salary + salaryProject + bonus
-            
-    #         c.execute('''INSERT OR REPLACE INTO "participate"("employeeid","projectid", "position", "salaryProject", "bonus", "finalSalary") VALUES (?,?,?,?,?,?)''', 
-    #                   [employee+1, project +1, position, salaryProject, bonus, finalSalary])           
 
     for employee in range(0, employeeSum):
         for projectEachEmployee in range(0,3):

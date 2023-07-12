@@ -152,9 +152,6 @@ class DepartmentMethod:
 
     def get_all(db:Session):
         return db.query(models.Project).all()
-    
-    # def get_all(db:Session):
-    #     return db.query(models.Department).all()
 
 class ProjectAndEmployeeMethod:
     def get_all_employee(db: Session, employeeid: Union[int, None]):

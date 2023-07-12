@@ -411,7 +411,7 @@ def avgFinalSalary(
         avgSalary =data.DepartmentMethod.get_avgFinalSalary_department(db, departmentid)
         df= pd.DataFrame.from_dict(avgSalary)
         nameD = df['Phòng ban'][0]
-        LuongTB = df['Lương tháng trung bình'][0]      
+        LuongTB = df['Lương tháng trung bình'][0]
     else:
         result = {
             "field": "departmentId",
