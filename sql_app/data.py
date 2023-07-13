@@ -154,6 +154,13 @@ class DepartmentMethod:
     def get_name_department(db: Session, departmentid:int):
         return db.query(models.Department.name.label('Phòng ban')).filter(models.Department.id == departmentid).all()
 
+    def get_list(db: Session):
+        return db.query(models.Employee.departmentId.label('Mã phòng ban'),
+                        func.avg(models.Participate.finalSalary).label('Lương tháng trung bình')
+                        ).select_from(models.Employee).join(models.Participate).filter(
+                            and_(models.Employee.id == models.Participate.employeeId)
+                        ).group_by(models.Employee.departmentId).all()
+
     def get_all(db:Session):
         return db.query(models.Project).all()
 

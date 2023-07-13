@@ -4,6 +4,7 @@ from typing import Union
 import appDes as appDes
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 import sql_app.models as models
 import sql_app.schemas as schemas
 import sql_app.data as data
@@ -534,4 +535,31 @@ def get_number_of_projectCompleted(db: Session = Depends(get_db)):
     return HTMLResponse(content=html_chart, status_code=200)
 
 # endregion
+
+import io
+import matplotlib
+matplotlib.use('AGG')
+from fastapi import BackgroundTasks, Response
+
+def create_img(x,y):
+
+    plt.rcParams['figure.figsize'] = [7.50, 3.50]
+    plt.rcParams['figure.autolayout'] = True
+    fig = plt.figure()  # make sure to call this, in order to create a new figure
+    plt.plot(x, y)
+    img_buf = io.BytesIO()
+    plt.savefig(img_buf, format='png')
+    plt.close(fig)
+    return img_buf
+    
+@app.get('/Department/avgFinalSalary/Bar')
+def get_img(background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
+    avgSalary =data.DepartmentMethod.get_list(db)
+    df= pd.DataFrame.from_dict(avgSalary)
+    nameD = df['Mã phòng ban']
+    LuongTB = df['Lương tháng trung bình']
+    img_buf = create_img(nameD,LuongTB)
+    background_tasks.add_task(img_buf.close)
+    headers = {'Content-Disposition': 'inline; filename="out.png"'}
+    return Response(img_buf.getvalue(), headers=headers, media_type='image/png')
 
