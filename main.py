@@ -367,7 +367,7 @@ def updateRate(
 ):
     result = " "
     if(employee.id > 0):
-        if employee.rate > 0 | employee.rate < 5:
+        if employee.rate > 0 and employee.rate < 6:
             updateRate = data.RateMethod.update_Rate(db,schemas.EmployeeRate(
                 id = employee.id,
                 rate = employee.rate
@@ -380,7 +380,7 @@ def updateRate(
             }
     else:
         result = {
-            "field": "classid",
+            "field": "employeeid",
             "errMsg": "Thông tin không hợp lệ"
         }
     return result
