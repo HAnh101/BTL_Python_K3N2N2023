@@ -188,7 +188,6 @@ class EmployeeInformationMethod:
     def find_employee(db: Session, employeeInfor: schemas.EmployeeFind):
             return db.query(
                 models.Employee.name.label('Họ và tên'),
-                # models.Department.name.label('Phòng ban'),
                 models.Project.name.label('Dự án'),                
                 models.Participate.position.label('Chức vụ'),
                 models.Participate.finalSalary.label('Tổng lương tháng'),

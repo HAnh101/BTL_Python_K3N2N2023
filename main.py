@@ -198,7 +198,7 @@ def get_bonus_project(
             listBonusProject = data.BonusProjectMethod.get_all_bonus(db, projectid)
             if len(listBonusProject) != 0:
                 df = pd.DataFrame.from_dict(listBonusProject)
-                bonusList = df['Lương thưởng']
+                bonusList = df[['Mã nhân viên','Lương thưởng']]
                 projectName = df['Dự án'][0]
                 return {
                     "msg": f"Thống kê lương thưởng theo dự án {projectName}",
@@ -534,3 +534,4 @@ def get_number_of_projectCompleted(db: Session = Depends(get_db)):
     return HTMLResponse(content=html_chart, status_code=200)
 
 # endregion
+
