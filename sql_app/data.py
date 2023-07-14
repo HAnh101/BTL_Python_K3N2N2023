@@ -170,6 +170,7 @@ class DepartmentMethod:
 class ProjectAndEmployeeMethod:
     def get_all_employee(db: Session, employeeid: Union[int, None]):
         return db.query(models.Employee.id.label('Mã nhân viên'),
+                        models.Project.id.label('Mã dự án'),
                         models.Project.name.label('Dự án'),
                         models.Participate.finalSalary.label('Tổng lương tháng')).join(models.Employee).join(models.Project).filter(models.Employee.id == employeeid).all()
 

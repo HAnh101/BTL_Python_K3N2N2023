@@ -163,8 +163,16 @@ def Sum_2_project(
                 luong = np.array([luongDuAn1, luongDuAn2])
                 luongTrungBinh = np.round(np.sum(luong) ,1)
             else:
+                employeeInDepartment = data.ProjectAndEmployeeMethod.get_all_employee(db, employeeid=employee.employeeid)
+                df = pd.DataFrame.from_dict(employeeInDepartment)
+                projectid = df['Mã dự án'].to_list()
+                projectid
+                detail = "Nhân viên này chỉ tham gia dự án có mã: "
+                for i in projectid:
+                    detail += str(i) + ' '
                 raise HTTPException(status_code=404, detail={
                 "field": "duAn1, duAn2",
+                "detail": detail,
                 "errMsg": "Thông tin không hợp lệ"
                 })
         else: 
