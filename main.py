@@ -1,4 +1,4 @@
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException, BackgroundTasks, Response
 from sqlalchemy.orm import Session
 from typing import Union
 import appDes as appDes
@@ -14,6 +14,9 @@ from sql_app.default import initDef
 from fastapi.responses import HTMLResponse
 import webbrowser
 import os
+import io
+import matplotlib
+matplotlib.use('AGG')
 
 templates = Jinja2Templates(directory="pages/")
 models.Base.metadata.create_all(bind=engine)
@@ -530,10 +533,6 @@ def get_number_of_projectCompleted(db: Session = Depends(get_db)):
 # endregion
 
 #region Mở rộng: vẽ biểu đồ
-import io
-import matplotlib
-matplotlib.use('AGG')
-from fastapi import BackgroundTasks, Response
 
 def create_img(x,y):
 
