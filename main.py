@@ -65,7 +65,6 @@ def home():
 
 #region Hoang Anh
 #pd
-
 @app.get('/project/LuongCuaNhanVien/{employeeid}', 
          tags=['Hoàng Anh Pandas'],
          description=appDes.descriptionApi['HoangAnhPandas']['LuongCuaNhanVien'])
@@ -97,7 +96,6 @@ def get_employee_salary_project(
             "field": "employeeid",
             "errMsg": "Chưa có thông tin"
         })
-
 
 @app.post('/project/CapNhatDuAn', 
           tags=['Hoàng Anh Pandas'],
@@ -137,8 +135,7 @@ def get_Project_Avg_Salary(
         raise HTTPException(status_code=404, detail={
             "field": "projectid",
             "errMsg": "Thông tin không hợp lệ"
-            })
-
+        })
 
 @app.post('/project/TongHaiDuAn', tags= ['Hoàng Anh Numpy'],
           description=appDes.descriptionApi['HoangAnhNumpy']['TongHaiDuAn'])
@@ -186,9 +183,6 @@ def Sum_2_project(
             "errMsg": "Chưa có thông tin"
         })
     return f'Tổng lương {duAn1} và {duAn2} của nhân viên {name} là {luongTrungBinh}'
-
-
-
 
 # endregion
 #region Ngoc Anh
@@ -261,6 +255,7 @@ def post_find_employee(employeeInfor: schemas.EmployeeFind, db: Session = Depend
             }
     return result
 
+#np
 @app.get('/project/LuongTongKetThangCuaNhanVien', 
          tags=['Ngọc Anh Numpy'], 
          description = appDes.descriptionApi['NgocAnhNp']['LuongTongKetThangCuaNhanVien'])
@@ -396,8 +391,8 @@ def updateRate(
             "errMsg": "Thông tin không hợp lệ"
         }
     return result
-#pd
 
+#pd
 @app.get('/statistic/top10',
          tags = ['Linh Pandas'],
          description=appDes.descriptionApi['LinhPD']['DanhSachNhanVienTop'])
@@ -541,9 +536,8 @@ def get_number_of_projectCompleted(db: Session = Depends(get_db)):
 # endregion
 
 #region Mở rộng: vẽ biểu đồ
-
+#plt
 def create_img(x,y):
-
     plt.rcParams['figure.figsize'] = [16.50, 6.50]
     plt.rcParams['figure.autolayout'] = True
     fig = plt.figure()
@@ -567,6 +561,5 @@ def get_img(background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
     background_tasks.add_task(img_buf.close)
     headers = {'Content-Disposition': 'inline; filename="out.png"'}
     return Response(img_buf.getvalue(), headers=headers, media_type='image/png')
-
 # endregion
 

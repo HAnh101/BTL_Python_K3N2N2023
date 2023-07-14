@@ -40,7 +40,7 @@ class ProjectMethod:
         db.commit()
         db.refresh(db_project)
         return db_project
-    
+
     def get_all(db:Session):
         return db.query(models.Project).all()
     
@@ -112,7 +112,6 @@ class ParticipateMethod:
             )
         ).all()
     
-
 class DepartmentMethod:
     def create_department(db: Session, department: schemas.DepartmentBase):
         db_department = models.Department(name = department.departmentName)

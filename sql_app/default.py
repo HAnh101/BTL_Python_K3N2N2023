@@ -37,7 +37,6 @@ def initDef():
             return departmentId
         else:
             departmentIdNew = np.random.randint(0,high=len(listDepartment)+1)
-            # departmentIdNew = int(np.ceil((department *employeeEachDepartment) * np.random.random()))
             employeeEachDepartmentNew = employeeEachDepartment
             departmentNew = department
             return departmentIsReady(departmentIdNew, employeeEachDepartmentNew, departmentNew)
@@ -53,7 +52,6 @@ def initDef():
 
     for eachEmployee in range (0, employeeSum):
         departmentId = np.random.randint(0,high=len(listDepartment)+1)
-        # departmentId = int(np.ceil(department *(employeeEachDepartment) * np.random.random()))
         setEmployeeToDepartment(departmentIsReady(departmentId, employeeEachDepartment, department))
 
     listProject = [
