@@ -521,21 +521,15 @@ def get_number_of_projectCompleted(db: Session = Depends(get_db)):
     all_Project = data.ProjectAndEmployeeMethod.get_all_project_all(db)
     df = pd.DataFrame.from_dict(all_Project)
     df['Trạng thái'] = df['Trạng thái dự án']
-    df_project = df[['Dự án','Trạng thái']]
-    
+    df_project = df[['Dự án','Trạng thái']] 
     df_complete = df_project[df_project['Trạng thái']=='Hoàn thành'].groupby(['Trạng thái']).size().reset_index(name='Tổng số Dự án hoàn thành')
-    
-    # table = pd.DataFrame.from_dict(df_complete).to_html()
-    # text_file = open("employee_list.html", "w", encoding='utf8')
-    # text_file.write(table)
-    # text_file.close()
-    # webbrowser.open(os.getcwd() + '/employee_list.html')
 
     html_chart = df_complete.to_html()
     return HTMLResponse(content=html_chart, status_code=200)
 
 # endregion
 
+#region Mở rộng: vẽ biểu đồ
 import io
 import matplotlib
 matplotlib.use('AGG')
@@ -543,23 +537,29 @@ from fastapi import BackgroundTasks, Response
 
 def create_img(x,y):
 
-    plt.rcParams['figure.figsize'] = [7.50, 3.50]
+    plt.rcParams['figure.figsize'] = [16.50, 6.50]
     plt.rcParams['figure.autolayout'] = True
-    fig = plt.figure()  # make sure to call this, in order to create a new figure
+    fig = plt.figure()
     plt.plot(x, y)
     img_buf = io.BytesIO()
     plt.savefig(img_buf, format='png')
     plt.close(fig)
     return img_buf
     
-@app.get('/Department/avgFinalSalary/Bar')
+@app.get('/Department/avgFinalSalary/Plot',
+         tags=['Mở rộng'],
+         description='Mở rộng: Vẽ biểu đồ trung bình lương phòng ban')
 def get_img(background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
     avgSalary =data.DepartmentMethod.get_list(db)
     df= pd.DataFrame.from_dict(avgSalary)
-    nameD = df['Mã phòng ban']
+    nameDepartment = data.DepartmentMethod.get_list_deparment_name(db)
+    df1 = pd.DataFrame.from_dict(nameDepartment)
+    nameD = df1['Phòng ban']
     LuongTB = df['Lương tháng trung bình']
     img_buf = create_img(nameD,LuongTB)
     background_tasks.add_task(img_buf.close)
     headers = {'Content-Disposition': 'inline; filename="out.png"'}
     return Response(img_buf.getvalue(), headers=headers, media_type='image/png')
+
+# endregion
 

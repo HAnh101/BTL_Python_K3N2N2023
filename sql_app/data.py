@@ -159,7 +159,10 @@ class DepartmentMethod:
                         func.avg(models.Participate.finalSalary).label('Lương tháng trung bình')
                         ).select_from(models.Employee).join(models.Participate).filter(
                             and_(models.Employee.id == models.Participate.employeeId)
-                        ).group_by(models.Employee.departmentId).all()
+                        ).group_by(models.Employee.departmentId).where(models.Employee.departmentId>0).all()
+    
+    def get_list_deparment_name(db: Session):
+        return db.query(models.Department.name.label("Phòng ban")).all()
 
     def get_all(db:Session):
         return db.query(models.Project).all()
