@@ -111,7 +111,7 @@ def post_project(project: schemas.Project, db : Session = Depends(get_db)):
         result = data.ProjectMethod.get_project(db, project.projectid)
     else:
         result = {
-            "field": "deparmentid",
+            "field": "projectid",
             "errMsg": "Thông tin không hợp lệ"
         }
     return result
@@ -421,12 +421,13 @@ def avgFinalSalary(
         df1 = pd.DataFrame.from_dict(nameDepartment)
         nameD = df1['Phòng ban'][0]
         LuongTB = df['Lương tháng trung bình'][0]
+        result = f'Lương tháng trung bình của {nameD} là {LuongTB}'
     else:
         result = {
             "field": "departmentId",
             "errMsg": "Thông tin không hợp lệ"
         }
-    return f'Lương tháng trung bình của {nameD} là {LuongTB}'
+    return result
 
 # endRegion
 
@@ -488,7 +489,7 @@ def Send_id_getProject(
         else:
             return f"Số nhân viên tham gia dự án {projectID.projectID} là {num_Emp_inProject} nhân viên"
     else:
-        raise HTTPException(status_code= 404, detail= f"Mã dự án {projectID.projectID} không tồn tại!")
+        raise HTTPException(status_code= 404, detail= f"Mã dự án không tồn tại!")
 
 
 #pd
